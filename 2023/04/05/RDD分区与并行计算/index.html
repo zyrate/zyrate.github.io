@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    
+
+<script>!function(){var e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,t=localStorage.getItem("use-color-scheme")||"auto";("dark"===t||e&&"light"!==t)&&document.documentElement.classList.toggle("dark",!0)}()</script>
+
+<meta charset="utf-8" >
+
+<title>RDD分区与并行计算</title>
+<meta name="keywords" content="RDD分区与并行计算, ZYR&#39;s">
+<meta name="description" content="分区应该是 Spark 中最基础、最核心的概念了，首先搞要清楚为什么要分区。不分区，分布式并行计算就无从谈起。其实哪怕不是分布式，就是如今在一台电脑上 8 个核心也都是标配了，如果把所有的计算任务全都交给一个核心处理便是对硬件资源的极度浪费">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="stylesheet" href="/style/main.css">
+
+
+<link rel="stylesheet" href="/style/jquery.fancybox.min.css">
+
+
+
+
+
+
+
+  <meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="ZYR's" type="application/atom+xml">
+</head>
+  <body>
+    <div id="app" class="main">
+
+<div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://zyrate.github.io">
+        <img class="avatar" src="/images/avatar.png" alt="logo" width="32px" height="32px">
+      </a>
+      <a href="https://zyrate.github.io">
+        <h1 class="site-title">ZYR&#39;s</h1>
+      </a>
+    </div>
+    <div class="right">
+        <i class="icon menu-switch icon-menu-outline" ></i>
+    </div>
+  </div>
+</div>
+
+<div class="menu-container" style="height: 0;opacity: 0;">
+<nav class="menu-list">
+  
+    
+      <a href="/" class="menu purple-link">
+        首页
+      </a>
+    
+  
+    
+      <a href="/tags" class="menu purple-link">
+        标签
+      </a>
+    
+  
+    
+      <a href="/categories" class="menu purple-link">
+        分类
+      </a>
+    
+  
+    
+      <a href="/archives" class="menu purple-link">
+        归档
+      </a>
+    
+  
+    
+      <a href="/about" class="menu purple-link">
+        关于
+      </a>
+    
+  
+</nav>
+</div>
+
+
+
+  <div class="content-container">
+    <div class="post-detail">
+      
+      <h2 class="post-title">RDD分区与并行计算</h2>
+      <div class="post-info post-detail-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-04-05</span>
+        
+      </div>
+      <div class="post-content-wrapper">
+        <div class="post-content">
+          <p>分区应该是 Spark 中最基础、最核心的概念了，首先搞要清楚为什么要分区。不分区，分布式并行计算就无从谈起。其实哪怕不是分布式，就是如今在一台电脑上 8 个核心也都是标配了，如果把所有的计算任务全都交给一个核心处理便是对硬件资源的极度浪费，效率也十分低下。而要想不浪费，就要采用 <strong>并行计算</strong> ，让每一个核心处理一部分任务。而不同的计算需要独立的上下文环境，这就引入了 <strong>分区</strong> 的概念。每个分区拥有自己的数据和计算函数，当所有的分区计算完毕后，再将它们的结果合并输出。</p>
+<span id="more"></span>
+<p>Spark RDD 在逻辑上实现了以上的分区概念。</p>
+<p>第一，在 Spark 中几乎所有功能的数据操作都是以 RDD 为单位的（当然还有累加器和广播变量，但是它们都有固定的应用场景），所以它可以看做在 Spark 中的一个“万能数据集”，不论什么数据都能往里面放，不论在哪个场景都可以用，首先明确这一点（其实是为了打破初学者对它的陌生感）。</p>
+<p>第二，所谓分区（Partition），简单来讲就是 RDD 在内部将数据分成的不同 <strong>切片</strong> ，从不同的数据源读取数据会按照不同的方式进行切片，因此不同的数据源往往会对应不同类型的 RDD 实现类，而每个 RDD 实现都有一个独立的 Partition 实现类来处理数据。在 Partition 实现类中，会用不同的方法存储实实在在的数据。不过这里要搞清楚，RDD 是惰性计算的，只有在执行行动算子后，数据才会在各种不同的 RDD 分区中 <em>计算、接收、传递</em> ，并不做停留。因此我的理解是，每个 RDD 分区调用它所 <em>依赖的上一级</em>  RDD 的对应的分区计算方法，获得新的分区数据，这本质是一个 <strong>链式调用</strong> 。这样行动算子会触发数据从读取到一步步计算的链式调用，最终获得计算结果，可以看做分区是固定的，数据一直在变化。</p>
+<p>由上所知，在没有发生 Shuffle 的时候，分区数量不变，不同分区之间的计算是 <strong>平行的</strong> ，互不干扰，谁快一点谁慢一点都无所谓，重点是它们在同时计算，这就是并行计算。而在遇到了像 groupByKey、orderBy 这样的需要打乱原有数据的方法，分区之间不可能再相安无事了，它们需要相互交换数据，即进行 Shuffle。Shuffle 操作需要数据 <strong>落盘</strong> 因此十分低效。而当发生 <strong>数据倾斜</strong> 时，Shuffle 又能够有效地保证计算的 <strong>负载均衡</strong> 。</p>
+<p>第三，RDD 在逻辑上实现了分区，而在集群上实际的计算如何实现的呢？这就要提到 RDD 的任务执行单位：Job、Stage、Task。简单来说，Job 对应一个行动算子，它内部通过 RDD <strong>谱系图</strong> 划分 Stage，通常是遇到一个 Shuffle 操作会生成一个新的 Stage。每个 Stage 根据 RDD 的分区数目生成 Task，一个 Task 对应一个分区。注意 Task 运行的结果是目标 RDD 的一个分区，而不是相反。前两个仍然是逻辑上的，真正可以运行的是 Task。Task 是在 Executor 上运行的，每一个物理节点可以起一个或多个 Executor。</p>
+<p>所以最终的运行模型是：Driver 端（就是写 Spark 程序的地方）生成 SparkContext 作为和 Spark 框架连接的入口，它会进行 DAG 图构建、Stage 划分、Task 生成等一系列操作，这些操作是在一个节点完成的。而封装好的 Task 会发送给 Yarn 等调度器进行调度，可能会根据 “计算向数据移动” 等准则分发给不同的节点的 Executor，从而进行计算。</p>
+<p><em><strong>知识点：</strong></em></p>
+<ol>
+<li>RDD 计算时（行动算子）在 <strong>一个分区</strong> 内是一个一个数据根据谱系图执行逻辑，即前面一个数据的逻辑全部执行完毕后才轮到下一个数据。分区内部的数据执行是 <strong>有序的</strong> ，不同分区之间的数据执行是 <strong>无序的</strong> 。</li>
+<li>MapPartitions 可以以分区为单位进行数据转换操作，但是会将整个分区的数据加载到内存中进行引用，容易出现内存溢出。</li>
+<li><strong>窄依赖：</strong> 如果新生成的 child RDD 中每个分区都依赖 parent RDD 中的一部分分区，那么这个分区依赖关系被称为 NarrowDependency。</li>
+<li><strong>宽依赖：</strong> 表示新生成的 child RDD 中的分区依赖 parent RDD 中的每个分区的一部分。</li>
+</ol>
+
+        </div>
+        <div class="top-div">
+          
+        </div>
+      </div>
+    </div>
+
+    
+      <div class="next-post">
+        <a class="purple-link" href="/2023/04/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/">
+          <h3 class="post-title">
+            下一篇：数据可视化
+          </h3>
+        </a>
+      </div>
+    
+  </div>
+
+
+
+
+<footer>
+<div class="site-footer">
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/zyrate" target="_blank">
+          <i class="icon icon-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> <a href="https://github.com/f-dong/hexo-theme-minimalism" target="_blank">Theme</a>
+  
+  
+  
+  
+  
+  
+</div>
+</footer>
+
+
+      </div>
+      
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.fancybox.min.js"></script>
+
+
+<script id="hexo-configurations">
+    window.theme_config = {"image":{"lazyload_enable":false}};
+    window.is_post = true;
+  </script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+
+    </div>
+  </body>
+</html>
+

@@ -1,95 +1,105 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
+<html lang="cn">
+  <head>
+    
 
-  
-  <title>数据可视化 | ZYR&#39;s blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="心得生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。 第 1 章 概念 数据可视化就是把一些复杂的数据转化成人们能够直接看到并理解的图形或图像，有利于我们更快地识">
-<meta property="og:type" content="article">
-<meta property="og:title" content="数据可视化">
-<meta property="og:url" content="https://zyrate.github.io/2023/04/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/index.html">
-<meta property="og:site_name" content="ZYR&#39;s blog">
-<meta property="og:description" content="心得生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。 第 1 章 概念 数据可视化就是把一些复杂的数据转化成人们能够直接看到并理解的图形或图像，有利于我们更快地识">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-04-03T10:01:20.959Z">
-<meta property="article:modified_time" content="2023-04-03T10:14:12.230Z">
-<meta property="article:author" content="Yunrui Zheng">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="ZYR&#39;s blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+<script>!function(){var e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,t=localStorage.getItem("use-color-scheme")||"auto";("dark"===t||e&&"light"!==t)&&document.documentElement.classList.toggle("dark",!0)}()</script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<meta charset="utf-8" >
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">ZYR&#39;s blog</a>
-      </h1>
-      
+<title>数据可视化</title>
+<meta name="keywords" content="数据可视化, ZYR&#39;s">
+<meta name="description" content="生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="stylesheet" href="/style/main.css">
+
+
+<link rel="stylesheet" href="/style/jquery.fancybox.min.css">
+
+
+
+
+
+
+
+  <meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="ZYR's" type="application/atom+xml">
+</head>
+  <body>
+    <div id="app" class="main">
+
+<div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://zyrate.github.io">
+        <img class="avatar" src="/images/avatar.png" alt="logo" width="32px" height="32px">
+      </a>
+      <a href="https://zyrate.github.io">
+        <h1 class="site-title">ZYR&#39;s</h1>
+      </a>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+    <div class="right">
+        <i class="icon menu-switch icon-menu-outline" ></i>
+    </div>
+  </div>
+</div>
+
+<div class="menu-container" style="height: 0;opacity: 0;">
+<nav class="menu-list">
+  
+    
+      <a href="/" class="menu purple-link">
+        首页
+      </a>
+    
+  
+    
+      <a href="/tags" class="menu purple-link">
+        标签
+      </a>
+    
+  
+    
+      <a href="/categories" class="menu purple-link">
+        分类
+      </a>
+    
+  
+    
+      <a href="/archives" class="menu purple-link">
+        归档
+      </a>
+    
+  
+    
+      <a href="/about" class="menu purple-link">
+        关于
+      </a>
+    
+  
+</nav>
+</div>
+
+
+
+  <div class="content-container">
+    <div class="post-detail">
+      
+      <h2 class="post-title">数据可视化</h2>
+      <div class="post-info post-detail-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-04-03</span>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://zyrate.github.io"></form>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-数据可视化" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/" class="article-date">
-  <time datetime="2023-04-03T10:01:20.959Z" itemprop="datePublished">2023-04-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      数据可视化
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h4><p>生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。</p>
-<h1 id="第-1-章-概念"><a href="#第-1-章-概念" class="headerlink" title="第 1 章 概念"></a>第 1 章 概念</h1><ol>
+      <div class="post-content-wrapper">
+        <div class="post-content">
+          <p>生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。</p>
+<span id="more"></span>
+<blockquote>
+<p>本文是北京大学袁晓如老师《数据可视化》课程的学习笔记<br>链接：<a target="_blank" rel="noopener" href="http://www.chinesemooc.org/mooc/5033">数据可视化 - 华文慕课 - 中文MOOC平台 (chinesemooc.org)</a></p>
+</blockquote>
+<h2 id="第-1-章概念"><a href="#第-1-章概念" class="headerlink" title="第 1 章概念"></a>第 1 章概念</h2><ol>
 <li><p><strong>数据可视化</strong>就是把一些复杂的数据转化成人们能够直接看到并理解的图形或图像，有利于我们更快地识别特征，发现知识。基于计算机的可视化系统通过对数据的视觉表达形式来帮助人们更有效地完成特定任务。</p>
 </li>
 <li><p>不同的领域、不同的任务、不同的受众的可视化构型是不同的，要做合理、有效的选择。</p>
@@ -97,8 +107,8 @@
 <li><p>要考虑计算限制、人类限制、显示限制</p>
 </li>
 </ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>第一章讲述了可视化的概念、构型和案例，其中构型的选择非常重要，需要考虑不同的领域、任务、受众和限制因素，要在多对矛盾中进行权衡。</p>
-<h1 id="第-2-章-数据类型"><a href="#第-2-章-数据类型" class="headerlink" title="第 2 章 数据类型"></a>第 2 章 数据类型</h1><ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>第一章讲述了可视化的概念、构型和案例，其中构型的选择非常重要，需要考虑不同的领域、任务、受众和限制因素，要在多对矛盾中进行权衡。</p>
+<h2 id="第-2-章数据类型"><a href="#第-2-章数据类型" class="headerlink" title="第 2 章数据类型"></a>第 2 章数据类型</h2><ol>
 <li>数据集类型<ol>
 <li>结构化数据：已知数据类型、语义<ol>
 <li>表格（Tables）</li>
@@ -117,8 +127,8 @@
 <li>表达力和有效性：服从<strong>一致性</strong>和<strong>重要性排序</strong>原则，一致性是指，视觉变量和数据属性应该匹配。</li>
 <li>2.7 的设计案例有启发意义。</li>
 </ol>
-<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>这一章主要介绍了各类数据集合数据的类型，目的是强调在可视化过程中，对属性类型的分析是十分重要的，不同类型的属性需要考虑不同的可视化方法，这决定着最后的呈现效果（千差万别）。要培养分析数据属性的思维。</p>
-<h1 id="第-3-章-数据编码（具体步骤）"><a href="#第-3-章-数据编码（具体步骤）" class="headerlink" title="第 3 章 数据编码（具体步骤）"></a>第 3 章 数据编码（具体步骤）</h1><ol>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>这一章主要介绍了各类数据集合数据的类型，目的是强调在可视化过程中，对属性类型的分析是十分重要的，不同类型的属性需要考虑不同的可视化方法，这决定着最后的呈现效果（千差万别）。要培养分析数据属性的思维。</p>
+<h2 id="第-3-章数据编码（具体步骤）"><a href="#第-3-章数据编码（具体步骤）" class="headerlink" title="第 3 章数据编码（具体步骤）"></a>第 3 章数据编码（具体步骤）</h2><ol>
 <li>符号和通道<ul>
 <li>符号标记（Marks）：如用<strong>圆点</strong>和<strong>直线</strong>代表数据项和连接<ul>
 <li>点、线、面，（包含、连接、嵌套）</li>
@@ -134,25 +144,30 @@
 </li>
 <li>考虑视觉通道的五个属性：选择性、关联性、量化性、可序性、容量</li>
 <li>史蒂文心理物理强度定律：强度由高到低：饱和度、长度、面积、深度、亮度，感官测试：<a target="_blank" rel="noopener" href="https://woodgears.ca/eyeball/">The eyeballing game (woodgears.ca)</a></li>
-<li>不同类别应该采取的通道排序：<br>![[Pasted image 20220625180011.png|400]]</li>
+<li>不同类别应该采取的通道排序：<br><a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png"  alt="image.png"></a></li>
 </ol>
-<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><p>直观地感受了各类视觉通道的差异和优缺点，在可视化的时候首先要选择正确的符号和通道，让人们有对数据更加准确的感受。</p>
-<h1 id="第-4-章-可视化任务与分析"><a href="#第-4-章-可视化任务与分析" class="headerlink" title="第 4 章 可视化任务与分析"></a>第 4 章 可视化任务与分析</h1><ol>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>直观地感受了各类视觉通道的差异和优缺点，在可视化的时候首先要选择正确的符号和通道，让人们有对数据更加准确的感受。</p>
+<h2 id="第-4-章可视化任务与分析"><a href="#第-4-章可视化任务与分析" class="headerlink" title="第 4 章可视化任务与分析"></a>第 4 章可视化任务与分析</h2><ol>
 <li>分析三要素：<ol>
 <li>对象：判断第二章所述的数据类型和属性类型</li>
 <li>手段：将第三章所述进行实践</li>
 <li>目的：考虑用户需求（什么样的用户）</li>
 </ol>
 </li>
-<li>可视化任务抽象。不同的可视化有不同的任务，这里的任务（功能）是从用户的角度出发，<strong>用户为什么需要可视化</strong>，该可视化想要用户得到什么信息。要识别任务-数据组合，寻找可能的解决方案。即分析三要素中的<strong>目的</strong>（行动和对象），行动有以下三个层次（由高到低）：分析、搜索、查询。<br>![[Pasted image 20220625214001.png|260]]<br>![[Pasted image 20220625214358.png|250]] ![[Pasted image 20220625214601.png|250]]</li>
-<li>分析三要素中的<strong>对象</strong>，对于不同的对象关心不同的特点：<br>![[Pasted image 20220625214947.png|500]]</li>
-<li>分析三要素中的<strong>手段</strong>，考虑可视化构型：<em>视觉编码</em>、<em>交互</em>。（后面讲）</li>
-<li>可视化设计验证四层模型：![[Pasted image 20220625215848.png|500]]，所谓问题导向就是某个领域的某个问题需要可视化，这时四层模型<strong>从外到内</strong>进行工作。所谓技术导向就是某个新型的可视化技术出现了，<strong>从内到外</strong>去寻找可以可视化那些领域问题。</li>
-<li>详细学习 4.5 可视化案例。</li>
+<li>可视化任务抽象。不同的可视化有不同的任务，这里的任务（功能）是从用户的角度出发，<strong>用户为什么需要可视化</strong>，该可视化想要用户得到什么信息。要识别任务-数据组合，寻找可能的解决方案。即分析三要素中的<strong>目的</strong>（行动和对象），行动有以下三个层次（由高到低）：分析、搜索、查询。<br><a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png"  alt="image.png"></a><br><a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png"  alt="image.png"></a></li>
 </ol>
-<h2 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h2><p>讲述了可视化过程中需要完成哪些分析工作，有哪些要素。从一个顶层抽象的角度阐述了可视化的整个流程。</p>
-<h1 id="第-5-章-交互"><a href="#第-5-章-交互" class="headerlink" title="第 5 章 交互"></a>第 5 章 交互</h1><p>==可视化系统 Jigsaw==</p>
-<ol>
+<ol start="3">
+<li><p>分析三要素中的<strong>对象</strong>，对于不同的对象关心不同的特点：<br><a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png"  alt="image.png"></a></p>
+</li>
+<li><p>分析三要素中的<strong>手段</strong>，考虑可视化构型：<em>视觉编码</em>、<em>交互</em>。（后面讲）</p>
+</li>
+<li><p>可视化设计验证四层模型：<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png"  alt="image.png"></a> 所谓问题导向就是某个领域的某个问题需要可视化，这时四层模型<strong>从外到内</strong>进行工作。所谓技术导向就是某个新型的可视化技术出现了，<strong>从内到外</strong>去寻找可以可视化那些领域问题。</p>
+</li>
+<li><p>详细学习 4.5 可视化案例。</p>
+</li>
+</ol>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><p>讲述了可视化过程中需要完成哪些分析工作，有哪些要素。从一个顶层抽象的角度阐述了可视化的整个流程。</p>
+<h2 id="第-5-章交互"><a href="#第-5-章交互" class="headerlink" title="第 5 章交互"></a>第 5 章交互</h2><ol>
 <li>视图操纵的方法<ol>
 <li>视图随时间变化<ol>
 <li>重新编码，对于对象</li>
@@ -164,22 +179,21 @@
 </ol>
 </li>
 <li>视图分面（Facet）<ol>
-<li>并置视图（重要）：把两个图放在一起关联 ![[Pasted image 20220626104057.png|500]]，<strong>动态查询</strong>是一个经典的例子，快速、增量式和可逆的交互操作。</li>
-<li>分隔视图 ![[Pasted image 20220626104801.png|100]]</li>
-<li>叠加视图 ![[Pasted image 20220626104820.png|100]]</li>
+<li>并置视图（重要）：把两个图放在一起关联 <a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png"  alt="image.png"></a>，<strong>动态查询</strong>是一个经典的例子，快速、增量式和可逆的交互操作。</li>
+<li>分隔视图 <a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png"  alt="image.png"></a></li>
+<li>叠加视图 <a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png"  alt="image.png"></a></li>
 </ol>
 </li>
 <li>数据约简（Reduce）<ol>
 <li>过滤：交叉过滤（一个维度变化，另外跟着变）</li>
 <li>聚合：空间聚合</li>
-<li>不完全互斥</li>
+<li>不完全互斥<br>可视化系统：Jigsaw<h3 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h3>讲述了可视化中最有趣但却做复杂的交互操作，介绍了视图操纵的几种方法，通过例子体会到不同交互方法的特点和功能，恰当的交互能够给用户带来良好的体验的同时，也能够让用户有更多的发现。</li>
 </ol>
 </li>
 </ol>
 </li>
 </ol>
-<h2 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h2><p>讲述了可视化中最有趣但却做复杂的交互操作，介绍了视图操纵的几种方法，通过例子体会到不同交互方法的特点和功能，恰当的交互能够给用户带来良好的体验的同时，也能够让用户有更多的发现。</p>
-<h1 id="第-6-章-光与颜色"><a href="#第-6-章-光与颜色" class="headerlink" title="第 6 章 光与颜色"></a>第 6 章 光与颜色</h1><ol>
+<h2 id="第-6-章光与颜色"><a href="#第-6-章光与颜色" class="headerlink" title="第 6 章光与颜色"></a>第 6 章光与颜色</h2><ol>
 <li>颜色表现不止于单一的颜色，还要考虑背景色，和周围的颜色（上下文）。</li>
 <li>环境颜色会增加其自身的<strong>相反颜色</strong>以获得更强的对比<ul>
 <li>深色增加浅色</li>
@@ -209,35 +223,35 @@
 </ol>
 </li>
 </ol>
-<h2 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h2><p>在使用颜色的时候需要考虑很多因素，比如对比、色盲等。在设计的时候需要遵循设计准则，让颜色起到增进理解而不是相反的作用。首先要理解颜色的各种属性，精确区分，谨慎选择。</p>
-<h1 id="第-7-8-章-表格"><a href="#第-7-8-章-表格" class="headerlink" title="第 7, 8 章 表格"></a>第 7, 8 章 表格</h1><p>表格分为平面表格（唯一索引）和多维表格（基于多个键的索引）。</p>
+<h3 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a>总结</h3><p>在使用颜色的时候需要考虑很多因素，比如对比、色盲等。在设计的时候需要遵循设计准则，让颜色起到增进理解而不是相反的作用。首先要理解颜色的各种属性，精确区分，谨慎选择。</p>
+<h2 id="第-7-8-章表格"><a href="#第-7-8-章表格" class="headerlink" title="第 7, 8 章表格"></a>第 7, 8 章表格</h2><p>表格分为平面表格（唯一索引）和多维表格（基于多个键的索引）。</p>
 <h3 id="平面数据"><a href="#平面数据" class="headerlink" title="平面数据"></a>平面数据</h3><ol>
 <li>表格数据的比较<ol>
 <li>条形图（可以有不同方向）：要注意<strong>基准问题</strong>（起始值是否从 0 出发）；要注意是用<strong>线性变换</strong>还是<strong>对数变换</strong>，这里的变换是指纵轴单位长度的变化。</li>
 <li>折线图：可用【光滑】【连接】和【散点】。要注意如果两个数据点之间连接起来，代表这个属性是可以<strong>插值</strong>的（比如年龄），如果属性不能插值（比如性别<strong>分类</strong>）则不能随意连接起来。</li>
 <li>散点图：常常用于揭示两个维度之间的<strong>相关性</strong>。如果有第三维的话，可以将其映射到其他的视觉属性，比如颜色、大小；要注意不要<strong>过度绘制</strong>，要善用<strong>透明度</strong>和<strong>趋势线</strong>。</li>
 <li>饼图/圈图：用于表示数据的<strong>组成</strong>。强调精确数值时用条形图，强调比例时用饼图。 </li>
-<li>堆叠条形图：将圈图拉直放到坐标系中，比饼图更加直观。![[Pasted image 20220626165930.png|50]]</li>
-<li>堆叠面积图：将离散的堆叠条形图连接起来。![[Pasted image 20220626165510.png|50]]</li>
+<li>堆叠条形图：将圈图拉直放到坐标系中，比饼图更加直观。</li>
+<li>堆叠面积图：将离散的堆叠条形图连接起来。</li>
 <li>表示数据的<strong>分布</strong>的图：<ul>
-<li>【直方图】与柱状图的区别是没有间隙，横轴是某个属性的<strong>区间划分</strong>；经验法则：根据数据量的平方根来确定划分区间的数目。![[Pasted image 20220626171249.png|50]]</li>
-<li>【密度图】 ![[Pasted image 20220626171334.png|60]]</li>
-<li>【箱型图】 ![[Pasted image 20220626171413.png|200]]</li>
-<li>【小提琴图】 ![[Pasted image 20220626171500.png|40]]</li>
-<li>【热力图】 ![[Pasted image 20220626171620.png|50]]</li>
+<li>【直方图】与柱状图的区别是没有间隙，横轴是某个属性的<strong>区间划分</strong>；经验法则：根据数据量的平方根来确定划分区间的数目。</li>
+<li>【密度图】</li>
+<li>【箱型图】 </li>
+<li>【小提琴图】 </li>
+<li>【热力图】 </li>
 </ul>
 </li>
 </ol>
 </li>
-<li>表格可视化经典方法：Table Lens（表格透镜）。不是很理解 ？？？![[Pasted image 20220626171934.png|300]]</li>
+<li>表格可视化经典方法：Table Lens（表格透镜）</li>
 </ol>
 <h3 id="高维数据"><a href="#高维数据" class="headerlink" title="高维数据"></a>高维数据</h3><ol>
 <li>散点图：点的位置表示两个属性，点的大小、颜色表示更多的属性，但往往表示不了高维（大于三个维度）。</li>
-<li>散点矩阵图：每行/列是一个维度，每个单元格绘制两个维度的散点图。下图是 4 个维度两两之间的关系： ![[Pasted image 20220626180723.png|200]]</li>
-<li>SPLOM 聚合-热力图：类似于散点图，减少计算量。![[Pasted image 20220626180956.png|200]]</li>
+<li>散点矩阵图：每行/列是一个维度，每个单元格绘制两个维度的散点图。下图是 4 个维度两两之间的关系：<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png"  alt="image.png"></a></li>
+<li>SPLOM 聚合-热力图：类似于散点图，减少计算量。<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png"  alt="image.png"></a></li>
 <li>相关热力图</li>
 <li>Rolling the Dice：两个散点图无缝转换</li>
-<li>平行坐标：将 x,y,z 等坐标轴平行放置，可以引入更多的维度，<strong>一条连线代表一个数据项</strong>，适用于异构数据。当数据量较大的时候，采用 &lt;增加透明度、捆绑、采样&gt; 来解决杂乱问题。 ![[Pasted image 20220626181425.png|300]]</li>
+<li>平行坐标：将 x,y,z 等坐标轴平行放置，可以引入更多的维度，<strong>一条连线代表一个数据项</strong>，适用于异构数据。当数据量较大的时候，采用 &lt;增加透明度、捆绑、采样&gt; 来解决杂乱问题。 <a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png"  alt="image.png"></a></li>
 <li>降维：保留尽可能多的变化，绘制低维空间，主成分分析。<ol>
 <li>多维缩放：让两两之间在平面的<strong>距离</strong>尽量正比于在高维空间的距离。常用于<strong>文本分析</strong>。</li>
 <li>地形图表示。</li>
@@ -247,13 +261,13 @@
 <li>多方法耦合：平行坐标+散点图</li>
 <li>其他方法：太多了，看 8.6 节</li>
 </ol>
-<h2 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a>总结</h2><p>详细讲述了各种图对于表格数据可视化的作用，适当进行选取。</p>
-<h1 id="第-9-10-章-网络结构"><a href="#第-9-10-章-网络结构" class="headerlink" title="第 9, 10 章 网络结构"></a>第 9, 10 章 网络结构</h1><ol>
+<h3 id="总结-6"><a href="#总结-6" class="headerlink" title="总结"></a>总结</h3><p>详细讲述了各种图对于表格数据可视化的作用，适当进行选取。</p>
+<h2 id="第-9-10-章网络结构"><a href="#第-9-10-章网络结构" class="headerlink" title="第 9, 10 章网络结构"></a>第 9, 10 章网络结构</h2><ol>
 <li>层次结构（树）：用于有组织结构、分级分类的数据，有谱系树、进化树、搜索树、决策树。<ol>
 <li>显式树可视化<ol>
 <li>Reingold-Tilford 布局：类似<strong>思维导图</strong></li>
 <li>DOI 树（突出焦点）：树节点过多，只强调部分节点（增大），或用三角形代表不重要的子树。</li>
-<li>双曲线树（突出焦点）：面向<strong>大规模</strong>的层次结构数据，全体数据可见，焦点放大。![[Pasted image 20220626193744.png|200]]</li>
+<li>双曲线树（突出焦点）：面向<strong>大规模</strong>的层次结构数据，全体数据可见，焦点放大。<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png"  alt="image.png"></a></li>
 </ol>
 </li>
 <li>隐式树可视化：看不见树的结构，但是树的内部关系。较重要的是<strong>包含式非显式布局</strong>。其中最重要的是【树图】（Treemap）：切分空间，节点为长方形，节点面积代表相应属性。 </li>
@@ -262,7 +276,7 @@
 </li>
 <li>图的可视化<ol>
 <li>两种主要类型的任务：【基于属性】、【基于拓扑】。</li>
-<li>显式图形式：![[Pasted image 20220626210520.png|200]]，布局标准如下，减少用户阅读的干扰（不用全部满足）：<ul>
+<li>显式图形式：<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png"  alt="image.png"></a>，布局标准如下，减少用户阅读的干扰（不用全部满足）：<ul>
 <li>最小化<strong>边交叉</strong></li>
 <li>最小化相邻接点的<strong>距离</strong></li>
 <li>最小化<strong>绘图区域</strong></li>
@@ -274,22 +288,22 @@
 </ul>
 </li>
 <li>矩阵形式：即图的<strong>邻接矩阵</strong>。非常适合邻域相关的任务，不适合路径相关的任务；节点的顺序很重要，<strong>排序</strong>后可能会发现规律。</li>
-<li>混合显示与矩阵形式：NodeTrix。![[Pasted image 20220626211824.png|300]]</li>
-<li><strong>力导向布局算法</strong>：边=弹簧，点=互斥磁铁，算法开销较大 ![[Pasted image 20220626212214.png|200]]</li>
+<li>混合显示与矩阵形式：NodeTrix。<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png"  alt="image.png"></a></li>
+<li><strong>力导向布局算法</strong>：边=弹簧，点=互斥磁铁，算法开销较大 <a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png"  alt="image.png"></a></li>
 </ol>
 </li>
 </ol>
-<h2 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h2><p>不同可视化方法之间需要进行取舍，为了相应的目的，可能会降低对另外一部分性能的支持。不同的可视化方法可以混用，可能达到更好的效果。</p>
-<h1 id="第-10-章-时间序列"><a href="#第-10-章-时间序列" class="headerlink" title="第 10 章 时间序列"></a>第 10 章 时间序列</h1><p>时间序列数据就是其中一个变量是时间的数据，也可以说是高维中一个维度是时间的数据。<a target="_blank" rel="noopener" href="http://vcg.informatik.uni-rostock.de/~ct/timeviz/timeviz.html">vcg.informatik.uni-rostock.de</a><br>可视化方法有：</p>
+<h3 id="总结-7"><a href="#总结-7" class="headerlink" title="总结"></a>总结</h3><p>不同可视化方法之间需要进行取舍，为了相应的目的，可能会降低对另外一部分性能的支持。不同的可视化方法可以混用，可能达到更好的效果。</p>
+<h2 id="第-10-章时间序列"><a href="#第-10-章时间序列" class="headerlink" title="第 10 章时间序列"></a>第 10 章时间序列</h2><p>时间序列数据就是其中一个变量是时间的数据，也可以说是高维中一个维度是时间的数据。<a target="_blank" rel="noopener" href="http://vcg.informatik.uni-rostock.de/~ct/timeviz/timeviz.html">vcg.informatik.uni-rostock.de</a><br>可视化方法有：</p>
 <ol>
-<li>缩略组图（Small Multiples）：在单个页面上显示的呈<strong>缩略图</strong>大小的图形集，表示单个现象的不同方面（不同时间）。也适用于多变量（多维）显示。比如新冠晴雨表：![[Pasted image 20220627101454.png|100]]</li>
+<li>缩略组图（Small Multiples）：在单个页面上显示的呈<strong>缩略图</strong>大小的图形集，表示单个现象的不同方面（不同时间）。也适用于多变量（多维）显示。比如新冠晴雨表。</li>
 <li>形态替换：将时间视为隐藏的维度，为每个时间帧生成一个可视化，然后播放<strong>动画</strong>，用户可以进行追踪（可以加上轨迹）。<a target="_blank" rel="noopener" href="https://www.gapminder.org/tools/">Gapminder Tools</a> 。但是该方法有一个问题是<strong>变化盲视</strong>，即人们没有注意到场景中可见元素的变化，需要根据具体情况解决（如增加视觉编码）。</li>
 <li>时间序列图：将横坐标规定为时间，纵坐标为属性（可以有多个，不同编码也可以嵌套堆叠）。对于多个时间序列的比较，有以下几种方法：<ul>
-<li>简单线图：多条不同的线在一起。![[Pasted image 20220627103130.png|250]]</li>
+<li>简单线图：多条不同的线在一起。</li>
 <li>编织线图：交替地根据数值的大小进行前后排列。<ul>
 <li>计算曲线焦点并<strong>垂直切割</strong>曲线面积，按照深度排序优先绘制最高部分面积。</li>
 <li>换句话就是：高个子永远在后面。</li>
-<li>![[Pasted image 20220627103838.png|250]]</li>
+<li><a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png"  alt="image.png"></a></li>
 </ul>
 </li>
 <li>缩略视图：见前文。</li>
@@ -306,12 +320,12 @@
 <li>时间曲线（Time Curves）：时间顺序的排列并不是规则的（水平的），而是根据内容相似性进行分布（弯曲）。曲线的形状可以表示相应的<strong>演变</strong>。（高维映射到低维 / 多维缩放）</li>
 <li>主题河流（ThemeRivers）：表示<strong>文本随时间的变化</strong>。<ul>
 <li>从左到右流经时间，类似堆叠曲线图</li>
-<li> ![[Pasted image 20220627105919.png|200]]</li>
+<li> <a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png"  alt="image.png"></a></li>
 </ul>
 </li>
 </ol>
-<h2 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a>总结</h2><p>时间在可视化里面可以看做高维中的一个带有先后顺序的属性，所以时间序列可视化都是在视觉上具有一定的连续性，这种联系可以让人们更直观地感受时间的流动与事物的变化。</p>
-<h1 id="第-12-章-地图"><a href="#第-12-章-地图" class="headerlink" title="第 12 章 地图"></a>第 12 章 地图</h1><ol>
+<h3 id="总结-8"><a href="#总结-8" class="headerlink" title="总结"></a>总结</h3><p>时间在可视化里面可以看做高维中的一个带有先后顺序的属性，所以时间序列可视化都是在视觉上具有一定的连续性，这种联系可以让人们更直观地感受时间的流动与事物的变化。</p>
+<h2 id="第-12-章地图"><a href="#第-12-章地图" class="headerlink" title="第 12 章地图"></a>第 12 章地图</h2><ol>
 <li>使用地图的原则和任务<ol>
 <li>原则：当空间关系被着重强调时使用地图</li>
 <li>任务：寻找<strong>地点/特征</strong>、寻找从 A 到 B 的<strong>路径</strong>、<strong>辨认</strong>与地点相关的属性、基于地点<strong>比较</strong>属性</li>
@@ -321,8 +335,8 @@
 <li>要考虑的属性：面积、形状、方向、方位、距离、尺度</li>
 <li>投影方法<ol>
 <li>墨卡托投影：投影至一个包裹着地球的<strong>圆柱</strong>上，再展开成平面。所有的经纬线都是直线前垂直相交；<strong>方位准确，面积不准确。</strong></li>
-<li>方位角等距投影：确定航线走向。![[Pasted image 20220627114020.png|200]]</li>
-<li>温格尔投影：最小化三种失真（面积、方向、距离）。![[Pasted image 20220627114230.png|200]]</li>
+<li>方位角等距投影：确定航线走向。<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png"  alt="image.png"></a></li>
+<li>温格尔投影：最小化三种失真（面积、方向、距离）。<a target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png" data-fancybox='lightbox' data-caption="image.png"><img   src="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png"  alt="image.png"></a></li>
 <li>锥形投影</li>
 <li>阿尔博斯等面积投影：正确显示面积</li>
 <li>复合投影</li>
@@ -338,13 +352,13 @@
 </ul>
 </li>
 <li>等高线地图：用来表述在空间中的<strong>数值分布</strong>，特别是数值之间的过渡。</li>
-<li>统计/变形地图：舍弃了地理区域的真实面积，而用数值大小来决定面积（缩放），但保留了原地理区域之间的方位、接壤等信息。![[Pasted image 20220627150746.png|200]]</li>
+<li>统计/变形地图：舍弃了地理区域的真实面积，而用数值大小来决定面积（缩放），但保留了原地理区域之间的方位、接壤等信息。</li>
 <li>比例标识地图：保留原地理区域的真实面积，而采用添加圆圈（或其他图形），用它的的大小或其他定量属性来代表数值的大小。</li>
 <li>流图：用于表示数据在不同地域之间的<strong>流动</strong>。（交通部门）</li>
 <li>地铁地图：采用伦敦地铁图方式。线路<strong>水平、垂直或 45 度</strong>，车站间等距。</li>
 </ol>
-<h2 id="总结-9"><a href="#总结-9" class="headerlink" title="总结"></a>总结</h2><p>地图可视化都是以真实的地理区域为基础，而自然地理区域的面积、方位是固定的，想要表示的数据又往往与面积、方位无关，这就需要考虑如何规避掉区域自然属性对可视化目的的干扰。</p>
-<h1 id="第-13-章-经验法则"><a href="#第-13-章-经验法则" class="headerlink" title="第 13 章 经验法则"></a>第 13 章 经验法则</h1><p>大多数情况下简单的、经验性的、探索性的但不是很准确的原则，体系不完整。</p>
+<h3 id="总结-9"><a href="#总结-9" class="headerlink" title="总结"></a>总结</h3><p>地图可视化都是以真实的地理区域为基础，而自然地理区域的面积、方位是固定的，想要表示的数据又往往与面积、方位无关，这就需要考虑如何规避掉区域自然属性对可视化目的的干扰。</p>
+<h2 id="第-13-章经验法则"><a href="#第-13-章经验法则" class="headerlink" title="第 13 章经验法则"></a>第 13 章经验法则</h2><p>大多数情况下简单的、经验性的、探索性的但不是很准确的原则，体系不完整。</p>
 <ol>
 <li>慎用 3D（但是技术在发展）<ol>
 <li><strong>屏幕</strong>不是三维的，更适合 2D 信息</li>
@@ -363,111 +377,70 @@
 <li>黑白情况下的可用性：可视化在黑白情况下依然有效。借用亮度、色度、饱和度等通道。</li>
 <li>功能重于形式：坚持有效性优先原则，考虑用户需求。</li>
 </ol>
-<h2 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a>总结</h2><p>经验法则是贯穿于所有可视化技术的原则，在进行可视化工作之前和完成之后，都可以对照经验法则检验工作是否得当。</p>
+<h3 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a>总结</h3><p>经验法则是贯穿于所有可视化技术的原则，在进行可视化工作之前和完成之后，都可以对照经验法则检验工作是否得当。</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://zyrate.github.io/2023/04/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="clg0o11f90000mcuihj5uhfnq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2023/04/03/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/04/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/">数据可视化</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/03/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
+        </div>
+        <div class="top-div">
+          <ol class="top-box"><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-1-%E7%AB%A0%E6%A6%82%E5%BF%B5"><span class="top-box-text">第 1 章概念</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-2-%E7%AB%A0%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="top-box-text">第 2 章数据类型</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-1"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-3-%E7%AB%A0%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81%EF%BC%88%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4%EF%BC%89"><span class="top-box-text">第 3 章数据编码（具体步骤）</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-2"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-4-%E7%AB%A0%E5%8F%AF%E8%A7%86%E5%8C%96%E4%BB%BB%E5%8A%A1%E4%B8%8E%E5%88%86%E6%9E%90"><span class="top-box-text">第 4 章可视化任务与分析</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-3"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-5-%E7%AB%A0%E4%BA%A4%E4%BA%92"><span class="top-box-text">第 5 章交互</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-4"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-6-%E7%AB%A0%E5%85%89%E4%B8%8E%E9%A2%9C%E8%89%B2"><span class="top-box-text">第 6 章光与颜色</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-5"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-7-8-%E7%AB%A0%E8%A1%A8%E6%A0%BC"><span class="top-box-text">第 7, 8 章表格</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E5%B9%B3%E9%9D%A2%E6%95%B0%E6%8D%AE"><span class="top-box-text">平面数据</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E9%AB%98%E7%BB%B4%E6%95%B0%E6%8D%AE"><span class="top-box-text">高维数据</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-6"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-9-10-%E7%AB%A0%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="top-box-text">第 9, 10 章网络结构</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-7"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-10-%E7%AB%A0%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97"><span class="top-box-text">第 10 章时间序列</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-8"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-12-%E7%AB%A0%E5%9C%B0%E5%9B%BE"><span class="top-box-text">第 12 章地图</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-9"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-13-%E7%AB%A0%E7%BB%8F%E9%AA%8C%E6%B3%95%E5%88%99"><span class="top-box-text">第 13 章经验法则</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-10"><span class="top-box-text">总结</span></a></li></ol></li></ol>
+        </div>
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2023 Yunrui Zheng<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+
     
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
   </div>
-</body>
+
+
+
+
+<footer>
+<div class="site-footer">
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/zyrate" target="_blank">
+          <i class="icon icon-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> <a href="https://github.com/f-dong/hexo-theme-minimalism" target="_blank">Theme</a>
+  
+  
+  
+  
+  
+  
+</div>
+</footer>
+
+
+      </div>
+      
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.fancybox.min.js"></script>
+
+
+<script id="hexo-configurations">
+    window.theme_config = {"image":{"lazyload_enable":false}};
+    window.is_post = true;
+  </script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+
+    </div>
+  </body>
 </html>
+
