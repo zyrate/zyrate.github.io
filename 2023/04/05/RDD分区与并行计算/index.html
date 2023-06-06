@@ -3,7 +3,9 @@
   <head>
     
 
+    
 <script>!function(){var e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,t=localStorage.getItem("use-color-scheme")||"auto";("dark"===t||e&&"light"!==t)&&document.documentElement.classList.toggle("dark",!0)}()</script>
+    
 
 <meta charset="utf-8" >
 
@@ -12,18 +14,12 @@
 <meta name="description" content="分区应该是 Spark 中最基础、最核心的概念了，首先搞要清楚为什么要分区。不分区，分布式并行计算就无从谈起。其实哪怕不是分布式，就是如今在一台电脑上 8 个核心也都是标配了，如果把所有的计算任务全都交给一个核心处理便是对硬件资源的极度浪费">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="RDD分区与并行计算">
+<meta property="og:description" content="分区应该是 Spark 中最基础、最核心的概念了，首先搞要清楚为什么要分区。不分区，分布式并行计算就无从谈起。其实哪怕不是分布式，就是如今在一台电脑上 8 个核心也都是标配了，如果把所有的计算任务全都交给一个核心处理便是对硬件资源的极度浪费">
+
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="stylesheet" href="/style/main.css">
-
-
-<link rel="stylesheet" href="/style/jquery.fancybox.min.css">
-
-
-
-
-
-
 
   <meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="ZYR's" type="application/atom+xml">
 </head>
@@ -58,12 +54,6 @@
     
       <a href="/tags" class="menu purple-link">
         标签
-      </a>
-    
-  
-    
-      <a href="/categories" class="menu purple-link">
-        分类
       </a>
     
   
@@ -131,12 +121,18 @@
 
 
 
+
+
+
+
+
+
 <footer>
 <div class="site-footer">
   <div class="social-container">
     
       
-        <a href="https://github.com/zyrate" target="_blank">
+        <a aria-label="跳转至github" href="https://github.com/f-dong" target="_blank">
           <i class="icon icon-github"></i>
         </a>
       
@@ -163,15 +159,9 @@
 
 
       </div>
-      
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/jquery.fancybox.min.js"></script>
-
-
-<script id="hexo-configurations">
-    window.theme_config = {"image":{"lazyload_enable":false}};
-    window.is_post = true;
-  </script>
+    </div>
+    
+<script id="hexo-configurations"> window.theme_config = {"image":{"lazyload_enable":true,"photo_zoom":"simple-lightbox"}}; window.is_post = true; </script>
 
 <script src="/js/main.js"></script>
 
@@ -179,7 +169,7 @@
 
 
 
-    </div>
+
   </body>
 </html>
 

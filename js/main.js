@@ -1,111 +1,120 @@
-/* global $, window, document */
+/* global window, document */
 'use strict';
 
 // 菜单
-$('.menu-switch').click(function() {
-  if ($(this).hasClass('icon-menu-outline')) {
-    $(this).removeClass(' icon-menu-outline ').addClass('icon-close-outline');
-    $('.menu-container').css('opacity', '1').css('height', 'auto');
-  } else {
-    $(this).addClass(' icon-menu-outline ').removeClass('icon-close-outline');
-    $('.menu-container').css('opacity', '0');
+document.querySelector('.menu-switch').addEventListener('click', function() {
+  const menuContainer = document.querySelector('.menu-container');
 
-    const that = $(this);
-    setTimeout(() => { that.hasClass('icon-menu-outline') && $('.menu-container').css('height', '0'); }, 600);
+  if (this.classList.contains('icon-menu-outline')) {
+    this.classList.replace('icon-menu-outline', 'icon-close-outline');
+    menuContainer.style.opacity = '1';
+    menuContainer.style.height = 'auto';
+    menuContainer.style['z-index'] = '1024';
+  } else {
+    this.classList.replace('icon-close-outline', 'icon-menu-outline');
+    menuContainer.style.opacity = '0';
+    menuContainer.style['z-index'] = '0';
+
+    setTimeout(() => {
+      if (this.classList.contains('icon-menu-outline')) {
+        menuContainer.style.height = '0';
+      }
+    }, 600);
   }
 });
 
-if (window.is_post) {
-  // 图片放大
-  // $(".post-detail img").each(function() {
-  //     var currentImage = $(this);
-  //     currentImage.wrap("<a href='" + currentImage.attr("src") + "' data-fancybox='lightbox' data-caption='" + currentImage.attr("alt") + "'></a>");
-  // });
+// 代码复制
+function addCopyIcons() {
+  const copyIcon = document.createElement('i');
+  copyIcon.className = 'fa-solid icon icon-copy copy-code';
+  copyIcon.title = '复制代码';
 
-  // 代码复制
-  const $copyIcon = $('<i class="fa-solid icon icon-copy copy-code" title="复制代码"></i>');
-  $('.post-detail figure').append($copyIcon);
-  $('.post-detail pre[class*=language-].line-numbers').append($copyIcon);
-  $('.post-detail .copy-code').on('click', function() {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    const table = $(this).prev('table');
-    if (table.length) {
-      range.selectNodeContents($(this).prev('table').find('.code').find('pre')[0]);
-    } else {
-      console.log($(this).prev('code')[0]);
-      range.selectNodeContents($(this).prev('code')[0]);
+  document.querySelectorAll('.post-detail figure').forEach(figure => {
+    figure.appendChild(copyIcon.cloneNode(true));
+  });
+
+  document.querySelectorAll('.post-detail pre[class*=language-].line-numbers').forEach(codeBlock => {
+    codeBlock.appendChild(copyIcon.cloneNode(true));
+  });
+
+  document.querySelectorAll('.post-detail .copy-code').forEach(copyCodeBtn => {
+    copyCodeBtn.addEventListener('click', function() {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      const table = this.previousElementSibling.tagName === 'TABLE' ? this.previousElementSibling : null;
+      const preElement = table ? table.querySelector('.code pre') : this.previousElementSibling;
+
+      range.selectNodeContents(preElement);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      selection.toString();
+      document.execCommand('copy');
+      selection.removeAllRanges();
+
+      this.innerHTML = '<span class="copy-success"> 复制成功</span>';
+      const that = this;
+      setTimeout(() => {
+        that.innerHTML = '';
+      }, 2500);
+    });
+  });
+}
+
+// 代码语言
+function setLanguageAttributes() {
+  const setLanguageAttribute = (element, attributeName) => {
+    const codeLanguage = element.getAttribute('class');
+    if (codeLanguage) {
+      const langName = codeLanguage.replace(attributeName, '').trim().replace('language-', '').trim();
+      element.setAttribute('data-content-after', langName || 'CODE');
+    }
+  };
+
+  document.querySelectorAll('code').forEach(codeBlock => {
+    setLanguageAttribute(codeBlock, 'line-numbers');
+  });
+
+  document.querySelectorAll('.highlight').forEach(highlightBlock => {
+    setLanguageAttribute(highlightBlock, 'highlight');
+  });
+}
+
+// 文章详情侧边目录
+function handleScroll() {
+  const mainNavLinks = document.querySelectorAll('.top-box a');
+  const fromTop = window.scrollY + 100;
+
+  mainNavLinks.forEach((link, index) => {
+    const section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null;
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
     }
 
-    selection.removeAllRanges();
-    selection.addRange(range);
-    selection.toString();
-    document.execCommand('copy');
-    selection.removeAllRanges();
-
-    $(this).html('<span class="copy-success"> 复制成功</span>');
-    setTimeout(() => {
-      $(this).html('');
-    }, 2500);
+    if (section.offsetTop <= fromTop && (!nextSection || nextSection.offsetTop > fromTop)) {
+      link.classList.add('current');
+    } else {
+      link.classList.remove('current');
+    }
   });
+}
 
-  // 代码语言
-  $(() => {
-    $('code').each(function() {
-      const code_language = $(this).attr('class');
-
-      if (!code_language) {
-        return true;
-      }
-      const lang_name = code_language.replace('line-numbers', '').trim().replace('highlight', '').trim().replace('language-', '').trim();
-
-      $(this).attr('data-content-after', lang_name || 'CODE');
-    });
-    $('.highlight').each(function() {
-      const code_language = $(this).attr('class');
-
-      if (!code_language) {
-        return true;
-      }
-      const lang_name = code_language.replace('highlight', '').trim();
-
-      $(this).attr('data-content-after', lang_name || 'CODE');
-    });
-  });
-
-  // 文章详情侧边目录
-  const mainNavLinks = document.querySelectorAll('.top-box a');
+function bindScrollEvent() {
   window.addEventListener('scroll', () => {
-    const fromTop = window.scrollY + 100;
-
-    mainNavLinks.forEach((link, index) => {
-      const section = document.getElementById(decodeURI(link.hash).substring(1));
-      let nextSection = null;
-      if (mainNavLinks[index + 1]) {
-        nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-      }
-      if (section.offsetTop <= fromTop) {
-        if (nextSection) {
-          if (nextSection.offsetTop > fromTop) {
-            link.classList.add('current');
-          } else {
-            link.classList.remove('current');
-          }
-        } else {
-          link.classList.add('current');
-        }
-      } else {
-        link.classList.remove('current');
-      }
-    });
+    handleScroll();
   });
+}
 
-  // 点击锚点滚动条偏移
-  $('.top-box-link').click(() => {
-    setTimeout(() => {
-      $(window).scrollTop($(window).scrollTop() - 54);
-      console.log($(window).scrollTop() - 54, '滚动条位置');
-    }, 0);
+// 点击锚点滚动条偏移
+function bindClickEvent() {
+  const topBoxLinks = document.querySelectorAll('.top-box-link');
+  topBoxLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      setTimeout(() => {
+        window.scrollTo(window.pageXOffset, window.pageYOffset - 54);
+        console.log(window.pageYOffset - 54, '滚动条位置');
+      }, 0);
+    });
   });
 }
 
@@ -132,27 +141,51 @@ function lazyload(imgs, data) {
             img.removeAttribute('loading');
             clearTimeout(loadImageTimeout);
           };
-        }, 500);
+        }, 300);
       }
     }
   });
 }
 
 // 图片懒加载
-if (window.theme_config.image && window.theme_config.image.lazyload_enable) {
-  const imgs = document.querySelectorAll('img');
+function lazyloadLoad() {
+  if (window.theme_config.image && window.theme_config.image.lazyload_enable) {
+    const imgs = document.querySelectorAll('img');
 
-  const data = {
-    now: Date.now(),
-    needLoad: true
-  };
+    const data = {
+      now: Date.now(),
+      needLoad: true
+    };
 
 
-  lazyload(imgs, data);
+    lazyload(imgs, data);
 
-  window.onscroll = () => {
-    if (Date.now() - data.now > 50 && data.needLoad) {
-      lazyload(imgs, data);
-    }
-  };
+    window.onscroll = () => {
+      if (Date.now() - data.now > 50 && data.needLoad) {
+        lazyload(imgs, data);
+      }
+    };
+  }
 }
+
+// 初始化页面
+function themeBoot() {
+  if (window.is_post) {
+    addCopyIcons();
+    setLanguageAttributes();
+    bindScrollEvent();
+    bindClickEvent();
+  }
+
+  lazyloadLoad();
+
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  themeBoot();
+});
+
+// hexo-blog-encrypt See https://github.com/D0n9X1n/hexo-blog-encrypt
+window.addEventListener('hexo-blog-decrypt', () => {
+  themeBoot();
+});
