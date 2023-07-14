@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    
+
+    
+<script>!function(){var e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,t=localStorage.getItem("use-color-scheme")||"auto";("dark"===t||e&&"light"!==t)&&document.documentElement.classList.toggle("dark",!0)}()</script>
+    
+
+<meta charset="utf-8" >
+
+<title>MIT6.830 学习笔记 · Lab 1</title>
+<meta name="keywords" content="MIT6.830 学习笔记 · Lab 1, ZYR&#39;s">
+<meta name="description" content="6.830 是 MIT 的一门数据库课程，它的 Lab 是用 Java 写一个简易的数据库 SimpleDB。
+Lab1 总共有 6 个 exercise，主要是练习的是数据库的数据存储部分。
+
+
+Exercise 1
+
+src/java/">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="MIT6.830 学习笔记 · Lab 1">
+<meta property="og:description" content="6.830 是 MIT 的一门数据库课程，它的 Lab 是用 Java 写一个简易的数据库 SimpleDB。
+Lab1 总共有 6 个 exercise，主要是练习的是数据库的数据存储部分。
+
+
+Exercise 1
+
+src/java/">
+
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="stylesheet" href="/style/main.css">
+
+  <link rel="stylesheet" href="/style/simple-lightbox.min.css"><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="ZYR's" type="application/atom+xml">
+</head>
+  <body>
+    <div id="app" class="main">
+
+<div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://zyrate.github.io">
+        <img class="avatar" src="/images/avatar.png" alt="logo" width="32px" height="32px">
+      </a>
+      <a href="https://zyrate.github.io">
+        <h1 class="site-title">ZYR&#39;s</h1>
+      </a>
+    </div>
+    <div class="right">
+        <i class="icon menu-switch icon-menu-outline" ></i>
+    </div>
+  </div>
+</div>
+
+<div class="menu-container" style="height: 0;opacity: 0;">
+<nav class="menu-list">
+  
+    
+      <a href="/" class="menu purple-link">
+        首页
+      </a>
+    
+  
+    
+      <a href="/tags" class="menu purple-link">
+        标签
+      </a>
+    
+  
+    
+      <a href="/archives" class="menu purple-link">
+        归档
+      </a>
+    
+  
+    
+      <a href="/about" class="menu purple-link">
+        关于
+      </a>
+    
+  
+</nav>
+</div>
+
+
+
+  <div class="content-container">
+    <div class="post-detail">
+      
+      <h2 class="post-title">MIT6.830 学习笔记 · Lab 1</h2>
+      <div class="post-info post-detail-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-07-07</span>
+        
+      </div>
+      <div class="post-content-wrapper">
+        <div class="post-content">
+          <p>6.830 是 MIT 的一门数据库课程，它的 Lab 是用 Java 写一个简易的数据库 SimpleDB。</p>
+<p>Lab1 总共有 6 个 exercise，主要是练习的是数据库的数据存储部分。</p>
+<span id="more"></span>
+
+<h3 id="Exercise-1"><a href="#Exercise-1" class="headerlink" title="Exercise 1"></a>Exercise 1</h3><hr>
+<ul>
+<li><code>src/java/simpledb/storage/TupleDesc.java</code></li>
+<li><code>src/java/simpledb/storage/Tuple.java</code></li>
+</ul>
+<hr>
+<p>在 SimpleDB 中，<strong>逻辑上</strong>的存储单元由大到小分别是 <strong>Database -&gt; Table -&gt; Tuple -&gt; Field</strong>。一个表中的每一条记录就是一个 Tuple 元组对象，元组中的每一列是一个 Field 字段值，目前只实现了 Int 和 String（固定长度）类型。</p>
+<p>每个元组需要一个 TupleDesc 对象来描述该元组包含的所有字段，包括每个字段类型 <code>fieldType</code> 和字段名 <code>fieldName</code>，在 SimpleDB 中由 TDItem 对象存储。</p>
+<blockquote>
+<p>在实现 TupleDesc 的 toString() 方法时，发现了一个显而易见但之前没注意到的问题：集合每次在调用 iterator() 方法时都会生成一个新的 Iterator，所以不能反复调用此方法。另外 <code>for-each</code> 语句不能用于 Iterator，只能用于数组或实现了 Iterable 接口的对象。</p>
+</blockquote>
+<h3 id="Exercise-2"><a href="#Exercise-2" class="headerlink" title="Exercise 2"></a>Exercise 2</h3><hr>
+<ul>
+<li><code>src/java/simpledb/common/Catalog.java</code></li>
+</ul>
+<hr>
+<p>Catalog 是管理数据库所有表的单例对象，比较简单。</p>
+<ul>
+<li>主要实现了供外界调用的 addTable、getTableName 等方法</li>
+<li>在 SimpleDB 中，<strong>一个 Table 对应一个 DbFile</strong>，并且共享同一个 ID（DbFile 绝对路径的 hashcode）</li>
+<li>这里的 HashMap 用并发安全的比较好</li>
+</ul>
+<h3 id="Exercise-3"><a href="#Exercise-3" class="headerlink" title="Exercise 3"></a>Exercise 3</h3><hr>
+<ul>
+<li><code>src/java/simpledb/storage/BufferPool.java</code><ul>
+<li>实现 <code>getPage()</code> 方法</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>BufferPool 也是一个全局单例对象，它负责维护访问页面 Page 的缓存。<br>关于页面，有三个容易混淆的概念：</p>
+<ol>
+<li>硬盘中的页面（也可以叫块 block）</li>
+<li>操作系统中的页面</li>
+<li>数据库中的页面<br>Page 是数据库向硬盘中读取和写入一次数据的最小单位，一般来说数据库的页面比底层的页面要大一些，所以需要我们自己写一些逻辑来保证操作的原子性（暂时不需要）。</li>
+</ol>
+<p>每次通过 PageId（存储 tableId 和 pageNo）来获取页面。首先查找缓存，没有的话就通过 Catalog 获取 DbFile 读取页面并加入缓存。如果缓存占满，就要进行页面置换（暂时不需要）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Page <span class="title function_">getPage</span><span class="params">(TransactionId tid, PageId pid, Permissions perm)</span></span><br><span class="line">	<span class="keyword">throws</span> TransactionAbortedException, DbException &#123;</span><br><span class="line">	<span class="type">Page</span> <span class="variable">res</span> <span class="operator">=</span> idToPage.get(pid);</span><br><span class="line">	<span class="keyword">if</span>(res == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="type">Catalog</span> <span class="variable">catalog</span> <span class="operator">=</span> Database.getCatalog();</span><br><span class="line">		<span class="type">DbFile</span> <span class="variable">f</span> <span class="operator">=</span> catalog.getDatabaseFile(pid.getTableId());</span><br><span class="line">		res = f.readPage(pid);</span><br><span class="line">		idToPage.put(pid, res);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Exercise-4"><a href="#Exercise-4" class="headerlink" title="Exercise 4"></a>Exercise 4</h3><hr>
+<ul>
+<li><code>src/java/simpledb/storage/HeapPageId.java</code> （继承自 PageId）</li>
+<li><code>src/java/simpledb/storage/RecordId.java</code></li>
+<li><code>src/java/simpledb/storage/HeapPage.java</code> （继承自 Page）</li>
+</ul>
+<hr>
+<p>前两个 Id 对象主要就是 <code>hashcode()</code> 和 <code>equals()</code> 方法的编写，注意：</p>
+<blockquote>
+<p>在重写一个类的 <code>equals</code> 方法的时候，必须同时重写 <code>hashCode</code> 方法。否则的话，在使用需要判断 hash 值的数据结构（如 HashMap）进行存储时就会出现问题。<strong>要求：</strong> equals 为 true 时 hashCode 一定为 true；hashCode 为 true 时，equals 不一定为 true。</p>
+</blockquote>
+<p>HeapPage 是实际存储在缓存中的页面（从硬盘读取到内存），它主要包含头部 header 标志位和一个固定长度的 tuple 数组（slots），结构示意图如下：<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230705211424.png"><img   src="/images/loading.svg" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230705211424.png"  alt="image.png" lazyload></a><br>页面中的 slot（插槽）有几个，header 就有几位，当一个元组插入 slot 后，header 对应位置设置为 1，删除元组则反之。在 SimpleDB 中，一个 table 的 TupleDesc 确定下来后，tuple 的长度就是固定的，因此可以<strong>计算出</strong>该页面可以有多少个 slot，用于初始化 header 和数组。</p>
+<p>计算 slot 个数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getNumTuples</span><span class="params">()</span> &#123;        </span><br><span class="line">	<span class="comment">// 每个页面可存储的元组数计算公式（大小单位是字节）：</span></span><br><span class="line">	<span class="comment">// 页面大小 * 8 / (元组大小 * 8 + 1)，向下取整</span></span><br><span class="line">	<span class="type">int</span> <span class="variable">numTuples</span> <span class="operator">=</span> BufferPool.getPageSize()*<span class="number">8</span> / (td.getSize()*<span class="number">8</span>+<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> numTuples;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>+1 是因为每个元组要附带一个标志位。</p>
+<p>计算 header 大小（字节），多余的 0 位不考虑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getHeaderSize</span><span class="params">()</span> &#123;        </span><br><span class="line">	<span class="comment">// Header要存储numSlots个bit，计算所需的bytes</span></span><br><span class="line">	<span class="type">int</span> <span class="variable">headerSize</span> <span class="operator">=</span> (<span class="type">int</span>) Math.ceil(numSlots / <span class="number">8.0</span>); <span class="comment">// 向上取整</span></span><br><span class="line">	<span class="keyword">return</span> headerSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HeapPage 在初始化时接受一个 pageId 和从硬盘读入的序列化后的 byte 数组进行<strong>反序列化</strong>，相反，<code>getPageData</code> 方法将该页面序列化以存入硬盘。</p>
+<p>需要实现 <code>isSlotUsed()</code> 方法，该方法返回某个 slot 是否插入了元组。检查 header 对应位置的标志位是否为 1 即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isSlotUsed</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">	<span class="comment">// 注意规定了从每个byte从右到左（low to high）</span></span><br><span class="line">	<span class="type">byte</span> <span class="variable">slot</span> <span class="operator">=</span> (<span class="type">byte</span>) ((header[i/<span class="number">8</span>] &gt;&gt; (i%<span class="number">8</span>)) &amp; <span class="number">1</span>); </span><br><span class="line">	<span class="keyword">return</span> slot == (<span class="type">byte</span>)<span class="number">1</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Exercise-5"><a href="#Exercise-5" class="headerlink" title="Exercise 5"></a>Exercise 5</h3><hr>
+<ul>
+<li><code>src/java/simpledb/storage/HeapFile.java</code> （继承自 DbFile）</li>
+</ul>
+<hr>
+<p>HeapFile 对应一个表在硬盘中存储的文件，存储的单位是 HeapPage，所以主要是实现 <code>readPage()</code> 方法，它接受 pageId，需要找到对应 Page 在文件中的偏移量读取出来。一定要用文件随机读取，而不能一次性全部读到内存中，因为文件可能会很大。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Page <span class="title function_">readPage</span><span class="params">(PageId pid)</span> &#123;</span><br><span class="line">	<span class="comment">// 找到对应Page所在的偏移量，读取后生成HeapPage</span></span><br><span class="line">	<span class="type">int</span> <span class="variable">pageSize</span> <span class="operator">=</span> BufferPool.getPageSize();</span><br><span class="line">	<span class="type">int</span> <span class="variable">offset</span> <span class="operator">=</span> pid.getPageNumber() * pageSize;</span><br><span class="line">	<span class="type">byte</span>[] data = <span class="keyword">new</span> <span class="title class_">byte</span>[pageSize];</span><br><span class="line">	<span class="type">Page</span> <span class="variable">heapPage</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">try</span> (<span class="type">RandomAccessFile</span> <span class="variable">f</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RandomAccessFile</span>(file, <span class="string">&quot;r&quot;</span>)) &#123;</span><br><span class="line">		f.seek(offset);</span><br><span class="line">		f.read(data);</span><br><span class="line">		heapPage = <span class="keyword">new</span> <span class="title class_">HeapPage</span>((HeapPageId)pid, data);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> heapPage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>另外的一个难点是实现 <code>iterator()</code> 方法，它的功能是遍历该表（DbFile）中的所有元组。那么就需要我们遍历 HeapFile 的所有 HeapPage，过程中使用 HeapPage 的 Iterator 来遍历元组。<br>但是上面实现的 <code>readPage()</code> 方法是给 BufferPool 调用的，因为所有的页面读取都要经过缓存。所以我们需要调用 BufferPool 的 <code>getPage()</code> 方法来获取页面，从 <code>pageNo = 0</code> 开始累加，直到到达该文件所存储的页面数量的上限，是在 <code>numPages()</code> 里计算得到的（文件大小除以 PageSize）。</p>
+<h3 id="Exercise-6"><a href="#Exercise-6" class="headerlink" title="Exercise 6"></a>Exercise 6</h3><hr>
+<ul>
+<li><code>src/java/simpledb/execution/SeqScan.java</code> （实现 OpIterator）</li>
+</ul>
+<hr>
+<p>Operator 是执行计划的基本单位，最简单、最底层的一个 Operator 就是 <strong>SeqScan</strong>，按照存储顺序扫描某一个表的全部元组。</p>
+<p>这里主要添加了表的<strong>别名 alias</strong>的概念，我们需要生成一个 <code>tableAlias.filedName</code> 形式的 TupleDesc 以供后续使用。</p>
+<p>实现 OpIterator 接口的全部方法，主要是调用 HeapFile 里的 Iterator 的相应方法。</p>
+
+        </div>
+        <div class="top-div">
+          <ol class="top-box"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#Exercise-1"><span class="top-box-text">Exercise 1</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#Exercise-2"><span class="top-box-text">Exercise 2</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#Exercise-3"><span class="top-box-text">Exercise 3</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#Exercise-4"><span class="top-box-text">Exercise 4</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#Exercise-5"><span class="top-box-text">Exercise 5</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#Exercise-6"><span class="top-box-text">Exercise 6</span></a></li></ol>
+        </div>
+      </div>
+    </div>
+
+    
+      <div class="next-post">
+        <a class="purple-link" href="/2023/04/05/RDD%E5%88%86%E5%8C%BA%E4%B8%8E%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/">
+          <h3 class="post-title">
+            下一篇：RDD分区与并行计算
+          </h3>
+        </a>
+      </div>
+    
+  </div>
+
+
+
+
+
+
+
+
+
+
+<footer>
+<div class="site-footer">
+  <div class="social-container">
+    
+      
+        <a aria-label="跳转至github" href="https://github.com/zyrate" target="_blank">
+          <i class="icon icon-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> <a href="https://github.com/f-dong/hexo-theme-minimalism" target="_blank">Theme</a>
+  
+  
+  
+  
+  
+  
+</div>
+</footer>
+
+
+      </div>
+    </div>
+    
+<script id="hexo-configurations"> window.theme_config = {"image":{"lazyload_enable":true,"photo_zoom":"simple-lightbox"}}; window.is_post = true; </script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+  <script src="/js/simple-lightbox.min.js"></script><script>document.addEventListener('DOMContentLoaded', function() {new SimpleLightbox('.post-detail .simple-lightbox', {fileExt: false,captionsData:'alt'});});</script></body>
+</html>
+
