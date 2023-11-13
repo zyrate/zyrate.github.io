@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231017183102.png">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231018210912.png">
 <meta property="article:published_time" content="2023-11-13T14:30:10.938Z">
-<meta property="article:modified_time" content="2023-11-13T14:35:47.588Z">
+<meta property="article:modified_time" content="2023-11-13T14:46:45.442Z">
 <meta property="article:author" content="Yunrui Zheng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231017180921.png">
@@ -128,11 +128,11 @@
 <li>只有一个事务可以在一个对象有排他锁。<br>在该规则下，如果一个事务在请求页面的时候，无法获取该页面的锁，就必须被阻塞，以等待锁资源<strong>被其他事务释放</strong>留给自己去竞争。特别的是，如果一个事物在申请排他锁时，如果已经持有了该页面的共享锁且是唯一一个持有者，那么可将此共享锁升级为排他锁（<strong>锁升级</strong>）。</li>
 </ol>
 <h4 id="两阶段锁（2PL）"><a href="#两阶段锁（2PL）" class="headerlink" title="两阶段锁（2PL）"></a>两阶段锁（2PL）</h4><p>考虑两个事务按照上述锁机制正常执行，有可能发生下图的情况：（X 排他，S 共享）</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231017180921.png"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231017180921.png" alt="|200"/></div><div class="image-meta"><span class="image-caption center">|200</span></div></div>
 <p>T1 和 T2 都正常提交了，但是 T1 对于页面 A 发生了“<strong>不可重复读</strong>”现象，即在同一个事务先后两次读到的数据有可能不一样（被别的事务如 T2 修改了）。</p>
 <p>解决这个问题的办法就是实现两阶段锁协议（2PL）。2PL 的两个阶段分别是<strong>扩展阶段（Growing）</strong> 和 <strong>收缩阶段（Shrinking）</strong>，在扩展阶段事务只能获取锁，在收缩阶段事务只能释放锁。</p>
 <p>两阶段锁协议本身足以保证冲突可串行性，但它可能会导致<strong>级联中止（Cascading aborts）</strong> 问题，即一个事务的中止可能导致其他多个事务也一起中止。这是因为在 2PL 中一个事务可能基于另一个事务尚未提交的数据进行操作，如果那个事务被中止，就会发生级联中止。如下图：</p>
-<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231017183102.png"/></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231017183102.png" alt="|200"/></div><div class="image-meta"><span class="image-caption center">|200</span></div></div>
 <p>为了避免这种情况，需要实现<strong>严格两阶段锁</strong>协议（Strict 2PL），即一个事务只能在它提交或中止时释放所有锁。SimpleDB 要求实现 Strict 2PL 协议。这其实简化了操作，因为在赋予事务锁的时候不用考虑什么时候执行完了操作该释放，而是通通等到最后 commit 时释放。</p>
 <h4 id="页面级锁机制实现"><a href="#页面级锁机制实现" class="headerlink" title="页面级锁机制实现"></a>页面级锁机制实现</h4><p>刚开始时看到需要实现读写锁，自然会想到 JUC 中的 <code>ReentrantReadWriteLock</code> 类，然而该类是负责线程同步的，一个事务可以有多个线程，所以他们不在同一粒度。另外只用 Java 提供的这些类并不能很好地实现 2PL 协议，也并不契合事务并发场景。因此我们需要自己实现事务的读写锁机制，但是类库中的一些思想可以借鉴。</p>
 <p>我们定义一个 LockManger 来负责维护事务和锁的状态，在 BufferPool 中事务只需调用相应的方法来获取和释放锁就行了。可以想到 LockManger 需要提供以下方法：</p>
