@@ -1,90 +1,130 @@
 <!DOCTYPE html>
-<html lang="cn">
-  <head>
-    
+<html lang='zh-CN'>
 
-    
-<script>!function(){var e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,t=localStorage.getItem("use-color-scheme")||"auto";("dark"===t||e&&"light"!==t)&&document.documentElement.classList.toggle("dark",!0)}()</script>
-    
+<head>
+  <meta name="generator" content="Hexo 5.4.2">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
 
-<meta charset="utf-8" >
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
 
-<title>数据可视化</title>
-<meta name="keywords" content="数据可视化, ZYR&#39;s">
-<meta name="description" content="生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>数据可视化 - ZYR的博客</title>
+
+  
+    <meta name="description" content="生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。">
+<meta property="og:type" content="article">
 <meta property="og:title" content="数据可视化">
-<meta property="og:description" content="生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角">
+<meta property="og:url" content="https://zyrate.github.io/2023/04/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/index.html">
+<meta property="og:site_name" content="ZYR的博客">
+<meta property="og:description" content="生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png">
+<meta property="og:image" content="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png">
+<meta property="article:published_time" content="2023-04-03T10:01:20.959Z">
+<meta property="article:modified_time" content="2023-04-05T13:45:05.771Z">
+<meta property="article:author" content="Yunrui Zheng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png">
+  
+  
+  
+  
 
-<link rel="shortcut icon" href="/favicon.ico">
-<link rel="stylesheet" href="/style/main.css">
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="ZYR的博客" type="application/atom+xml">
+  
 
-  <link rel="stylesheet" href="/style/simple-lightbox.min.css"><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="ZYR's" type="application/atom+xml">
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+  
+
+  
+
+  
+
+
+  
 </head>
-  <body>
-    <div id="app" class="main">
 
-<div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://zyrate.github.io">
-        <img class="avatar" src="/images/avatar.png" alt="logo" width="32px" height="32px">
-      </a>
-      <a href="https://zyrate.github.io">
-        <h1 class="site-title">ZYR&#39;s</h1>
-      </a>
-    </div>
-    <div class="right">
-        <i class="icon menu-switch icon-menu-outline" ></i>
-    </div>
-  </div>
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">ZYR的博客</div><div class="sub cap">为者常成，行者常至</div></a></div>
+
+<nav class="menu dis-select"></nav>
+</header>
+
+
+<div class="widgets">
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">数据可视化</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-1-%E7%AB%A0%E6%A6%82%E5%BF%B5"><span class="toc-text">第 1 章概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-2-%E7%AB%A0%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">第 2 章数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-3-%E7%AB%A0%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81%EF%BC%88%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4%EF%BC%89"><span class="toc-text">第 3 章数据编码（具体步骤）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-4-%E7%AB%A0%E5%8F%AF%E8%A7%86%E5%8C%96%E4%BB%BB%E5%8A%A1%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-text">第 4 章可视化任务与分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-3"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-5-%E7%AB%A0%E4%BA%A4%E4%BA%92"><span class="toc-text">第 5 章交互</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-4"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-6-%E7%AB%A0%E5%85%89%E4%B8%8E%E9%A2%9C%E8%89%B2"><span class="toc-text">第 6 章光与颜色</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-5"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-7-8-%E7%AB%A0%E8%A1%A8%E6%A0%BC"><span class="toc-text">第 7, 8 章表格</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B3%E9%9D%A2%E6%95%B0%E6%8D%AE"><span class="toc-text">平面数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E7%BB%B4%E6%95%B0%E6%8D%AE"><span class="toc-text">高维数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-6"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-9-10-%E7%AB%A0%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-text">第 9, 10 章网络结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-7"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-10-%E7%AB%A0%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97"><span class="toc-text">第 10 章时间序列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-8"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-12-%E7%AB%A0%E5%9C%B0%E5%9B%BE"><span class="toc-text">第 12 章地图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-9"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC-13-%E7%AB%A0%E7%BB%8F%E9%AA%8C%E6%B3%95%E5%88%99"><span class="toc-text">第 13 章经验法则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-10"><span class="toc-text">总结</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+
 </div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/zyrate" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/social/08a41b181ce68.svg"/></a></div></footer>
 
-<div class="menu-container" style="height: 0;opacity: 0;">
-<nav class="menu-list">
-  
-    
-      <a href="/" class="menu purple-link">
-        首页
-      </a>
-    
-  
-    
-      <a href="/tags" class="menu purple-link">
-        标签
-      </a>
-    
-  
-    
-      <a href="/archives" class="menu purple-link">
-        归档
-      </a>
-    
-  
-    
-      <a href="/about" class="menu purple-link">
-        关于
-      </a>
-    
-  
-</nav>
-</div>
-
-
-
-  <div class="content-container">
-    <div class="post-detail">
+    </aside>
+    <div class='l_main'>
       
-      <h2 class="post-title">数据可视化</h2>
-      <div class="post-info post-detail-info">
-        <span><i class="icon icon-calendar-outline"></i> 2023-04-03</span>
-        
-      </div>
-      <div class="post-content-wrapper">
-        <div class="post-content">
-          <p>生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。</p>
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-04-03T10:01:20.959Z">2023-04-03</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>数据可视化</span></h1>
+<p>生活中数据可视化无处不在，以前都会有意无意地进行过可视化的工作，但是通过专业化的分析和方法设计出的结果会更能达到可视化的目的，设计过程也会更加得心应手。另外数据可视化有时候并不只是数据的展现，还包含着数据的挖掘。比如看到一批数据，从不同的角度和考量进行可视化可能会从中挖掘出不同的信息。</p>
 <span id="more"></span>
 <blockquote>
 <p>本文是北京大学袁晓如老师《数据可视化》课程的学习笔记<br>链接：<a target="_blank" rel="noopener" href="http://www.chinesemooc.org/mooc/5033">数据可视化 - 华文慕课 - 中文MOOC平台 (chinesemooc.org)</a></p>
@@ -134,7 +174,7 @@
 </li>
 <li>考虑视觉通道的五个属性：选择性、关联性、量化性、可序性、容量</li>
 <li>史蒂文心理物理强度定律：强度由高到低：饱和度、长度、面积、深度、亮度，感官测试：<a target="_blank" rel="noopener" href="https://woodgears.ca/eyeball/">The eyeballing game (woodgears.ca)</a></li>
-<li>不同类别应该采取的通道排序：<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png"  alt="image.png" lazyload></a></li>
+<li>不同类别应该采取的通道排序：<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/8SkCzbviuNQWj35.png"  alt="image.png" lazyload></a></li>
 </ol>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>直观地感受了各类视觉通道的差异和优缺点，在可视化的时候首先要选择正确的符号和通道，让人们有对数据更加准确的感受。</p>
 <h2 id="第-4-章可视化任务与分析"><a href="#第-4-章可视化任务与分析" class="headerlink" title="第 4 章可视化任务与分析"></a>第 4 章可视化任务与分析</h2><ol>
@@ -144,14 +184,14 @@
 <li>目的：考虑用户需求（什么样的用户）</li>
 </ol>
 </li>
-<li>可视化任务抽象。不同的可视化有不同的任务，这里的任务（功能）是从用户的角度出发，<strong>用户为什么需要可视化</strong>，该可视化想要用户得到什么信息。要识别任务-数据组合，寻找可能的解决方案。即分析三要素中的<strong>目的</strong>（行动和对象），行动有以下三个层次（由高到低）：分析、搜索、查询。<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png"  alt="image.png" lazyload></a><br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png"  alt="image.png" lazyload></a></li>
+<li>可视化任务抽象。不同的可视化有不同的任务，这里的任务（功能）是从用户的角度出发，<strong>用户为什么需要可视化</strong>，该可视化想要用户得到什么信息。要识别任务-数据组合，寻找可能的解决方案。即分析三要素中的<strong>目的</strong>（行动和对象），行动有以下三个层次（由高到低）：分析、搜索、查询。<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/Dd7CyGo5XbQUEAk.png"  alt="image.png" lazyload></a><br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/AoXZgrEcu6ORUeT.png"  alt="image.png" lazyload></a></li>
 </ol>
 <ol start="3">
-<li><p>分析三要素中的<strong>对象</strong>，对于不同的对象关心不同的特点：<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png"  alt="image.png" lazyload></a></p>
+<li><p>分析三要素中的<strong>对象</strong>，对于不同的对象关心不同的特点：<br><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/tH94MIVyqC58KGx.png"  alt="image.png" lazyload></a></p>
 </li>
 <li><p>分析三要素中的<strong>手段</strong>，考虑可视化构型：<em>视觉编码</em>、<em>交互</em>。（后面讲）</p>
 </li>
-<li><p>可视化设计验证四层模型：<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png"  alt="image.png" lazyload></a> 所谓问题导向就是某个领域的某个问题需要可视化，这时四层模型<strong>从外到内</strong>进行工作。所谓技术导向就是某个新型的可视化技术出现了，<strong>从内到外</strong>去寻找可以可视化那些领域问题。</p>
+<li><p>可视化设计验证四层模型：<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/lU1xgsmKn2AjZTb.png"  alt="image.png" lazyload></a> 所谓问题导向就是某个领域的某个问题需要可视化，这时四层模型<strong>从外到内</strong>进行工作。所谓技术导向就是某个新型的可视化技术出现了，<strong>从内到外</strong>去寻找可以可视化那些领域问题。</p>
 </li>
 <li><p>详细学习 4.5 可视化案例。</p>
 </li>
@@ -169,9 +209,9 @@
 </ol>
 </li>
 <li>视图分面（Facet）<ol>
-<li>并置视图（重要）：把两个图放在一起关联 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png"  alt="image.png" lazyload></a>，<strong>动态查询</strong>是一个经典的例子，快速、增量式和可逆的交互操作。</li>
-<li>分隔视图 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png"  alt="image.png" lazyload></a></li>
-<li>叠加视图 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png"  alt="image.png" lazyload></a></li>
+<li>并置视图（重要）：把两个图放在一起关联 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/zoqn3aKpRDtSIZk.png"  alt="image.png" lazyload></a>，<strong>动态查询</strong>是一个经典的例子，快速、增量式和可逆的交互操作。</li>
+<li>分隔视图 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/swWjOxH1cbZoyQD.png"  alt="image.png" lazyload></a></li>
+<li>叠加视图 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/etTOVPnp3IqR41W.png"  alt="image.png" lazyload></a></li>
 </ol>
 </li>
 <li>数据约简（Reduce）<ol>
@@ -237,11 +277,11 @@
 </ol>
 <h3 id="高维数据"><a href="#高维数据" class="headerlink" title="高维数据"></a>高维数据</h3><ol>
 <li>散点图：点的位置表示两个属性，点的大小、颜色表示更多的属性，但往往表示不了高维（大于三个维度）。</li>
-<li>散点矩阵图：每行/列是一个维度，每个单元格绘制两个维度的散点图。下图是 4 个维度两两之间的关系：<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png"  alt="image.png" lazyload></a></li>
-<li>SPLOM 聚合-热力图：类似于散点图，减少计算量。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png"  alt="image.png" lazyload></a></li>
+<li>散点矩阵图：每行/列是一个维度，每个单元格绘制两个维度的散点图。下图是 4 个维度两两之间的关系：<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/Uayg1Z4DHKBhMiY.png"  alt="image.png" lazyload></a></li>
+<li>SPLOM 聚合-热力图：类似于散点图，减少计算量。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/PxvN5W639bLTRXp.png"  alt="image.png" lazyload></a></li>
 <li>相关热力图</li>
 <li>Rolling the Dice：两个散点图无缝转换</li>
-<li>平行坐标：将 x,y,z 等坐标轴平行放置，可以引入更多的维度，<strong>一条连线代表一个数据项</strong>，适用于异构数据。当数据量较大的时候，采用 &lt;增加透明度、捆绑、采样&gt; 来解决杂乱问题。 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png"  alt="image.png" lazyload></a></li>
+<li>平行坐标：将 x,y,z 等坐标轴平行放置，可以引入更多的维度，<strong>一条连线代表一个数据项</strong>，适用于异构数据。当数据量较大的时候，采用 &lt;增加透明度、捆绑、采样&gt; 来解决杂乱问题。 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/Wr9ozJxniel4cHS.png"  alt="image.png" lazyload></a></li>
 <li>降维：保留尽可能多的变化，绘制低维空间，主成分分析。<ol>
 <li>多维缩放：让两两之间在平面的<strong>距离</strong>尽量正比于在高维空间的距离。常用于<strong>文本分析</strong>。</li>
 <li>地形图表示。</li>
@@ -257,7 +297,7 @@
 <li>显式树可视化<ol>
 <li>Reingold-Tilford 布局：类似<strong>思维导图</strong></li>
 <li>DOI 树（突出焦点）：树节点过多，只强调部分节点（增大），或用三角形代表不重要的子树。</li>
-<li>双曲线树（突出焦点）：面向<strong>大规模</strong>的层次结构数据，全体数据可见，焦点放大。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png"  alt="image.png" lazyload></a></li>
+<li>双曲线树（突出焦点）：面向<strong>大规模</strong>的层次结构数据，全体数据可见，焦点放大。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/JsTuhIr69aKVSFj.png"  alt="image.png" lazyload></a></li>
 </ol>
 </li>
 <li>隐式树可视化：看不见树的结构，但是树的内部关系。较重要的是<strong>包含式非显式布局</strong>。其中最重要的是【树图】（Treemap）：切分空间，节点为长方形，节点面积代表相应属性。 </li>
@@ -266,7 +306,7 @@
 </li>
 <li>图的可视化<ol>
 <li>两种主要类型的任务：【基于属性】、【基于拓扑】。</li>
-<li>显式图形式：<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png"  alt="image.png" lazyload></a>，布局标准如下，减少用户阅读的干扰（不用全部满足）：<ul>
+<li>显式图形式：<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/pmPNEA2v9Qs7wuR.png"  alt="image.png" lazyload></a>，布局标准如下，减少用户阅读的干扰（不用全部满足）：<ul>
 <li>最小化<strong>边交叉</strong></li>
 <li>最小化相邻接点的<strong>距离</strong></li>
 <li>最小化<strong>绘图区域</strong></li>
@@ -278,8 +318,8 @@
 </ul>
 </li>
 <li>矩阵形式：即图的<strong>邻接矩阵</strong>。非常适合邻域相关的任务，不适合路径相关的任务；节点的顺序很重要，<strong>排序</strong>后可能会发现规律。</li>
-<li>混合显示与矩阵形式：NodeTrix。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png"  alt="image.png" lazyload></a></li>
-<li><strong>力导向布局算法</strong>：边=弹簧，点=互斥磁铁，算法开销较大 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png"  alt="image.png" lazyload></a></li>
+<li>混合显示与矩阵形式：NodeTrix。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/7g5MVax8Nln3iKZ.png"  alt="image.png" lazyload></a></li>
+<li><strong>力导向布局算法</strong>：边=弹簧，点=互斥磁铁，算法开销较大 <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/3NKfibdLD14YlWv.png"  alt="image.png" lazyload></a></li>
 </ol>
 </li>
 </ol>
@@ -293,7 +333,7 @@
 <li>编织线图：交替地根据数值的大小进行前后排列。<ul>
 <li>计算曲线焦点并<strong>垂直切割</strong>曲线面积，按照深度排序优先绘制最高部分面积。</li>
 <li>换句话就是：高个子永远在后面。</li>
-<li><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png"  alt="image.png" lazyload></a></li>
+<li><a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/WEJXveUmgLtsiSh.png"  alt="image.png" lazyload></a></li>
 </ul>
 </li>
 <li>缩略视图：见前文。</li>
@@ -310,7 +350,7 @@
 <li>时间曲线（Time Curves）：时间顺序的排列并不是规则的（水平的），而是根据内容相似性进行分布（弯曲）。曲线的形状可以表示相应的<strong>演变</strong>。（高维映射到低维 / 多维缩放）</li>
 <li>主题河流（ThemeRivers）：表示<strong>文本随时间的变化</strong>。<ul>
 <li>从左到右流经时间，类似堆叠曲线图</li>
-<li> <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png"  alt="image.png" lazyload></a></li>
+<li> <a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/FzfauWlJb7VdnwL.png"  alt="image.png" lazyload></a></li>
 </ul>
 </li>
 </ol>
@@ -325,8 +365,8 @@
 <li>要考虑的属性：面积、形状、方向、方位、距离、尺度</li>
 <li>投影方法<ol>
 <li>墨卡托投影：投影至一个包裹着地球的<strong>圆柱</strong>上，再展开成平面。所有的经纬线都是直线前垂直相交；<strong>方位准确，面积不准确。</strong></li>
-<li>方位角等距投影：确定航线走向。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png"  alt="image.png" lazyload></a></li>
-<li>温格尔投影：最小化三种失真（面积、方向、距离）。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png"><img   src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png"  alt="image.png" lazyload></a></li>
+<li>方位角等距投影：确定航线走向。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/wSAfPmcvJ9oisjU.png"  alt="image.png" lazyload></a></li>
+<li>温格尔投影：最小化三种失真（面积、方向、距离）。<a class="simple-lightbox" target="_blank" rel="noopener" href="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png"><img class="lazy"   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/loading.svg" data-src="https://s2.loli.net/2023/04/05/R7BHFMsZSOVYteN.png"  alt="image.png" lazyload></a></li>
 <li>锥形投影</li>
 <li>阿尔博斯等面积投影：正确显示面积</li>
 <li>复合投影</li>
@@ -369,15 +409,13 @@
 </ol>
 <h3 id="总结-10"><a href="#总结-10" class="headerlink" title="总结"></a>总结</h3><p>经验法则是贯穿于所有可视化技术的原则，在进行可视化工作之前和完成之后，都可以对照经验法则检验工作是否得当。</p>
 
-        </div>
-        <div class="top-div">
-          <ol class="top-box"><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-1-%E7%AB%A0%E6%A6%82%E5%BF%B5"><span class="top-box-text">第 1 章概念</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-2-%E7%AB%A0%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="top-box-text">第 2 章数据类型</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-1"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-3-%E7%AB%A0%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81%EF%BC%88%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4%EF%BC%89"><span class="top-box-text">第 3 章数据编码（具体步骤）</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-2"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-4-%E7%AB%A0%E5%8F%AF%E8%A7%86%E5%8C%96%E4%BB%BB%E5%8A%A1%E4%B8%8E%E5%88%86%E6%9E%90"><span class="top-box-text">第 4 章可视化任务与分析</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-3"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-5-%E7%AB%A0%E4%BA%A4%E4%BA%92"><span class="top-box-text">第 5 章交互</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-4"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-6-%E7%AB%A0%E5%85%89%E4%B8%8E%E9%A2%9C%E8%89%B2"><span class="top-box-text">第 6 章光与颜色</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-5"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-7-8-%E7%AB%A0%E8%A1%A8%E6%A0%BC"><span class="top-box-text">第 7, 8 章表格</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E5%B9%B3%E9%9D%A2%E6%95%B0%E6%8D%AE"><span class="top-box-text">平面数据</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E9%AB%98%E7%BB%B4%E6%95%B0%E6%8D%AE"><span class="top-box-text">高维数据</span></a></li><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-6"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-9-10-%E7%AB%A0%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="top-box-text">第 9, 10 章网络结构</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-7"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-10-%E7%AB%A0%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97"><span class="top-box-text">第 10 章时间序列</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-8"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-12-%E7%AB%A0%E5%9C%B0%E5%9B%BE"><span class="top-box-text">第 12 章地图</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-9"><span class="top-box-text">总结</span></a></li></ol></li><li class="top-box-item top-box-level-2"><a class="top-box-link" href="#%E7%AC%AC-13-%E7%AB%A0%E7%BB%8F%E9%AA%8C%E6%B3%95%E5%88%99"><span class="top-box-text">第 13 章经验法则</span></a><ol class="top-box-child"><li class="top-box-item top-box-level-3"><a class="top-box-link" href="#%E6%80%BB%E7%BB%93-10"><span class="top-box-text">总结</span></a></li></ol></li></ol>
-        </div>
-      </div>
-    </div>
 
-    
-  </div>
+
+
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/04/05/RDD%E5%88%86%E5%8C%BA%E4%B8%8E%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/">RDD分区与并行计算</a></div><div class="item" id="next"></div></section></div>
 
 
 
@@ -386,51 +424,183 @@
 
 
 
-
-
-<footer>
-<div class="site-footer">
-  <div class="social-container">
-    
       
-        <a aria-label="跳转至github" href="https://github.com/zyrate" target="_blank">
-          <i class="icon icon-github"></i>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  
-    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> <a href="https://github.com/f-dong/hexo-theme-minimalism" target="_blank">Theme</a>
-  
-  
-  
-  
-  
-  
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@zyrate</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
 </div>
-</footer>
 
-
-      </div>
     </div>
-    
-<script id="hexo-configurations"> window.theme_config = {"image":{"lazyload_enable":true,"photo_zoom":"simple-lightbox"}}; window.is_post = true; </script>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
 
-<script src="/js/main.js"></script>
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
 
 
 
+<!-- optional -->
 
 
 
-  <script src="/js/simple-lightbox.min.js"></script><script>document.addEventListener('DOMContentLoaded', function() {new SimpleLightbox('.post-detail .simple-lightbox', {fileExt: false,captionsData:'alt'});});</script></body>
+<!-- inject -->
+
+
+  </div>
+</body>
 </html>
-
