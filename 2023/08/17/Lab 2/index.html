@@ -23,16 +23,16 @@
   <title>MIT6.830 SimpleDB 实现笔记 Lab 2 - ZYR的博客</title>
 
   
-    <meta name="description" content="Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 Operator（OpIterator）类，它们会：  接受一个 child OpIterator，用以读取（遍历）目标数据； 接受一些控制该算子的参数； 同时实现 hasNext()、next() 等供外界遍历的方法。">
+    <meta name="description" content="Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 Operator（OpIterator）类，它们会：  接受一个 child OpIterator，用以读取（遍历）目标数据； 接受一些控制该算子的参数； 同时实现 hasNext()、next() 等供外界遍历的方法。  Exerc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MIT6.830 SimpleDB 实现笔记 Lab 2">
-<meta property="og:url" content="https://zyrate.github.io/2023/11/15/Lab%202/index.html">
+<meta property="og:url" content="https://zyrate.github.io/2023/08/17/Lab%202/index.html">
 <meta property="og:site_name" content="ZYR的博客">
-<meta property="og:description" content="Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 Operator（OpIterator）类，它们会：  接受一个 child OpIterator，用以读取（遍历）目标数据； 接受一些控制该算子的参数； 同时实现 hasNext()、next() 等供外界遍历的方法。">
+<meta property="og:description" content="Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 Operator（OpIterator）类，它们会：  接受一个 child OpIterator，用以读取（遍历）目标数据； 接受一些控制该算子的参数； 同时实现 hasNext()、next() 等供外界遍历的方法。  Exerc">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230715113426.png">
-<meta property="article:published_time" content="2023-11-15T13:48:54.521Z">
-<meta property="article:modified_time" content="2023-11-15T01:50:43.000Z">
+<meta property="article:published_time" content="2023-08-17T13:48:54.000Z">
+<meta property="article:modified_time" content="2023-11-15T14:10:16.000Z">
 <meta property="article:author" content="Yunrui Zheng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230715113426.png">
@@ -53,7 +53,7 @@
   
 
   
-    <link rel="shortcut icon" href="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/%E7%8C%B4%E5%AD%90.svg">
+    <link rel="shortcut icon" href="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/%E7%82%B9%E7%81%AB%E6%9F%B4.svg">
   
 
   
@@ -106,7 +106,7 @@
 
 
 
-<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-11-15T13:48:54.521Z">2023-11-15</time></div></div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-08-17T13:48:54.000Z">2023-08-17</time></div></div>
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>MIT6.830 SimpleDB 实现笔记 Lab 2</span></h1>
@@ -116,7 +116,6 @@
 <li>接受一些控制该算子的参数；</li>
 <li>同时实现 <code>hasNext()</code>、<code>next()</code> 等供外界遍历的方法。</li>
 </ul>
-<span id="more"></span>
 <h3 id="Exercise-1"><a href="#Exercise-1" class="headerlink" title="Exercise 1"></a>Exercise 1</h3><hr>
 <ul>
 <li>src/java/simpledb/execution/Predicate.java</li>
@@ -181,7 +180,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/11/15/Lab%206/">MIT6.830 SimpleDB 实现笔记 Lab 6</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/11/13/Lab%204/">MIT6.830 SimpleDB 实现笔记 Lab 4</a></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/10/20/Lab%204/">MIT6.830 SimpleDB 实现笔记 Lab 4</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/07/07/Lab%201/">MIT6.830 SimpleDB 实现笔记 Lab 1</a></div></section></div>
 
 
 
