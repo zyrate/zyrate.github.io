@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 5.4.2">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>MIT6.830 SimpleDB 实现笔记 Lab 6 - ZYR的博客</title>
+
+  
+    <meta name="description" content="Lab 6 实现 SimpleDB 的基于日志系统的回滚（rollback）和恢复（recover）功能。 WAL 机制首先，SimpleDB 要实现的是预写式日志（Write-ahead logging, WAL），也就是所有修改在生效之前都要先写入 log 文件中，写入的内容包括 redo 和 undo 信息，分别保证事务的持久性和原子性。 在 SimpleDB 中，日志的单位和锁一样是页面，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT6.830 SimpleDB 实现笔记 Lab 6">
+<meta property="og:url" content="https://zyrate.github.io/2023/11/15/Lab%206/index.html">
+<meta property="og:site_name" content="ZYR的博客">
+<meta property="og:description" content="Lab 6 实现 SimpleDB 的基于日志系统的回滚（rollback）和恢复（recover）功能。 WAL 机制首先，SimpleDB 要实现的是预写式日志（Write-ahead logging, WAL），也就是所有修改在生效之前都要先写入 log 文件中，写入的内容包括 redo 和 undo 信息，分别保证事务的持久性和原子性。 在 SimpleDB 中，日志的单位和锁一样是页面，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-15T13:48:54.648Z">
+<meta property="article:modified_time" content="2023-11-15T13:33:23.000Z">
+<meta property="article:author" content="Yunrui Zheng">
+<meta name="twitter:card" content="summary">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="ZYR的博客" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/%E7%8C%B4%E5%AD%90.svg">
+  
+
+  
+
+  
+
+
+  
+    
+      <link href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/lxgwwenkaiscreen.css" rel="stylesheet">
+    
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">ZYR的博客</div><div class="sub cap">为者常成，行者常至</div></a></div>
+
+<nav class="menu dis-select"></nav>
+</header>
+
+
+<div class="widgets">
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">MIT6.830 SimpleDB 实现笔记 Lab 6</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#WAL-%E6%9C%BA%E5%88%B6"><span class="toc-text">WAL 机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="toc-text">缓冲区管理策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#steal-%E7%AD%96%E7%95%A5"><span class="toc-text">steal 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#no-steal-%E7%AD%96%E7%95%A5"><span class="toc-text">no-steal 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#force-%E7%AD%96%E7%95%A5"><span class="toc-text">force 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#no-force-%E7%AD%96%E7%95%A5"><span class="toc-text">no-force 策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-text">日志文件结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rollback-%E5%AE%9E%E7%8E%B0"><span class="toc-text">Rollback 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Recover-%E5%AE%9E%E7%8E%B0"><span class="toc-text">Recover 实现</span></a></li></ol></div></div></widget>
+
+
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/zyrate" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/social/08a41b181ce68.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-11-15T13:48:54.648Z">2023-11-15</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>MIT6.830 SimpleDB 实现笔记 Lab 6</span></h1>
+<p>Lab 6 实现 SimpleDB 的基于日志系统的回滚（rollback）和恢复（recover）功能。</p>
+<h3 id="WAL-机制"><a href="#WAL-机制" class="headerlink" title="WAL 机制"></a>WAL 机制</h3><p>首先，SimpleDB 要实现的是<strong>预写式日志（Write-ahead logging, WAL）</strong>，也就是<strong>所有修改</strong>在生效之前都要先写入 log 文件中，写入的内容包括 redo 和 undo 信息，分别保证事务的<strong>持久性</strong>和<strong>原子性</strong>。</p>
+<p>在 SimpleDB 中，日志的单位和锁一样是页面，每个页面都可以通过 <code>setBeforeImage</code> 方法来设置 oldData，也就是每次 flush 到磁盘前页面还未变动时的旧数据（是上一次 flush 的时候保存的）。日志系统会在每次 flush 脏页的时候把 beforeImage 和 afterImage 写入日志文件，分别代表旧数据和新数据。这样在需要 redo 的时候，就把 afterImage 写入磁盘；需要 undo 的时候，就把 beforeImage 写入磁盘。</p>
+<p>Lab 6 只要求实现 LogFile 类中的 <code>rollback</code> 和 <code>recover</code> 方法：</p>
+<ul>
+<li>前者用在事务 <strong>abort</strong> 的时候，需要撤销 (undo) 该事务的所有操作，回滚数据库到之前的状态；</li>
+<li>后者用在发生崩溃 <strong>crash</strong> 的时候，需要撤销 (undo) 所有未提交事务的所有操作、重做 (redo) 所有已提交事务的所有操作，恢复数据库到正常状态。</li>
+</ul>
+<h3 id="缓冲区管理策略"><a href="#缓冲区管理策略" class="headerlink" title="缓冲区管理策略"></a>缓冲区管理策略</h3><p>数据库的缓冲区管理策略有<strong>两类四种</strong>，分别是：</p>
+<h4 id="steal-策略"><a href="#steal-策略" class="headerlink" title="steal 策略"></a>steal 策略</h4><p>允许从页面缓存逐出“脏页”。此时磁盘上可能包含 uncommitted 的数据，因此系统需要记录 undo log，以在事务 abort 时进行回滚（<strong>rollback</strong>）。</p>
+<h4 id="no-steal-策略"><a href="#no-steal-策略" class="headerlink" title="no-steal 策略"></a>no-steal 策略</h4><p>不允许从页面缓存逐出“脏页”。表示磁盘上不会存在 uncommitted 数据，因此无需回滚操作，也就无需记录 undo log。</p>
+<h4 id="force-策略"><a href="#force-策略" class="headerlink" title="force 策略"></a>force 策略</h4><p>事务在 committed 的时候必须将所有更新<strong>立刻持久化</strong>到磁盘，这样的话不需要 redo log，因为只要日志中存在 commit 记录就说明磁盘已经更新了全部数据。但是这样会导致磁盘发生很多小的写操作（更可能是随机写）。</p>
+<h4 id="no-force-策略"><a href="#no-force-策略" class="headerlink" title="no-force 策略"></a>no-force 策略</h4><p>事务在 committed 之后可以不立即持久化到磁盘，这样可以缓存很多的脏页<strong>批量持久化</strong>到磁盘，这样可以降低磁盘操作次数（提升顺序写），但是如果 committed 之后发生<strong>crash</strong>，那么此时已经提交的事务数据将会<strong>丢失</strong>（因为还没有持久化到磁盘），因此系统需要记录 redo log，在系统重启时候进行回复（recover）操作。</p>
+<blockquote>
+<p>在 SimpleDB 中, 之前的 Lab 要求实现的是 no-steal 和 force 策略，但是这种策略的效率不高。所以在本次 Lab 的 LogTest 中，它会时不时的打破 no-steal 策略，也就是通过随时调用 <code>flushAllPages()</code> 让磁盘上<strong>存在未提交的</strong>数据，测试 abort 后的回滚操作。同时也默认 no-force 的存在（虽然实际不是），以测试 crash 后的恢复操作。所以我们 redo 和 undo 都需要实现。</p>
+</blockquote>
+<h3 id="日志文件结构"><a href="#日志文件结构" class="headerlink" title="日志文件结构"></a>日志文件结构</h3><p>Log File 中一条记录的格式是：<br><code>&lt;RECORD_TYPE:int | TID:long | content | start:long&gt; </code></p>
+<ul>
+<li>其中 RECORD_TYPE 指记录的类型，TID 指事务的标识，content 在不同的类型中表示不同内容， start 指此条记录开始位置的偏移量。</li>
+<li>RECORD_TYPE 总共有 5 种表示不同的行为：<ul>
+<li>BEGIN, 事务开始</li>
+<li>UPDATE, 事务对页面进行 UPDATE 操作</li>
+<li>COMMIT, 事务提交</li>
+<li>ABORT, 事务中断</li>
+<li>CHECKPOINT, 检查点</li>
+</ul>
+</li>
+<li>在运行过程中各类记录被不停地<strong>追加</strong>到 Log File 里面。</li>
+<li>由于多个事务之间时<strong>并行执行</strong>的，所以日志文件里不同事务对不同页面的各项操作是<strong>混合交叉</strong>在一起的。</li>
+</ul>
+<p>BEGIN、COMMIT 和 ABORT 这三种记录的 <code>content</code> 位置是空的，不存储数据；而 UPDATE 存储的是序列化后的 beforeImage 和 afterImage；CHECKPOINT 存储的首先是一个 INT 类型代表<strong>当前活跃事务（未提交）的数量</strong>，后面跟的是每个活跃事务的 TID 和 BEGIN 记录的位置 offset（都是 Long 类型）。</p>
+<p><strong>检查点</strong>是为了加快恢复过程的速度。如果没有检查点，那么系统在宕机重启后需要从头对 Log File 进行顺序访问，依次找到所有未提交和已提交的事务进行 undo 和 redo 操作，费时费力。而检查点机制要求在向 Log File 中添加 CHECKPOINT 的时候，<strong>将缓冲区中所有的脏页刷新到磁盘</strong>，也就代表着在检查点之前提交了的事务无需在重启后执行恢复操作，因为磁盘已经拥有这些事务更新后的数据。我们只需从检查点之后顺序访问 Log File 即可。</p>
+<p>另外需要注意的是，检查点会记录那个时刻还未提交的所有事务 ID，这些事务并不能保证宕机后的原子性和持久性，因此也需要对这些事务进行恢复操作。</p>
+<h3 id="Rollback-实现"><a href="#Rollback-实现" class="headerlink" title="Rollback 实现"></a>Rollback 实现</h3><p><code>rollback</code> 方法在事务被 abort 的时候调用，此时该事务对所有页面产生的所有修改都应该<strong>失效</strong>，也就是说需要将所有相关页面的 beforeImage（旧数据）恢复到磁盘上（undo）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rollback</span><span class="params">(TransactionId tid)</span>&#123;</span><br><span class="line"><span class="comment">//省略synchronized结构</span></span><br><span class="line">	preAppend();  </span><br><span class="line">	<span class="comment">// 找到该事务在file中的第一个记录的偏移量  </span></span><br><span class="line">	<span class="type">long</span> <span class="variable">offset</span> <span class="operator">=</span> tidToFirstLogRecord.get(tid.getId());  </span><br><span class="line">	raf.seek(offset);  </span><br><span class="line">	<span class="comment">// 顺序访问直到文件末尾</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">true</span>) &#123;  </span><br><span class="line">	    <span class="keyword">try</span> &#123;  </span><br><span class="line">	        <span class="type">int</span> <span class="variable">type</span> <span class="operator">=</span> raf.readInt();  <span class="comment">// 记录类型</span></span><br><span class="line">	        <span class="type">long</span> <span class="variable">record_tid</span> <span class="operator">=</span> raf.readLong();  <span class="comment">// TID</span></span><br><span class="line">	        <span class="keyword">switch</span> (type) &#123;  </span><br><span class="line">	            <span class="keyword">case</span> UPDATE_RECORD: <span class="comment">// 更新记录</span></span><br><span class="line">	                <span class="type">Page</span> <span class="variable">before</span> <span class="operator">=</span> readPageData(raf);  <span class="comment">// 旧数据</span></span><br><span class="line">	                <span class="type">Page</span> <span class="variable">after</span> <span class="operator">=</span> readPageData(raf);   <span class="comment">// 新数据</span></span><br><span class="line">	                <span class="keyword">if</span>(record_tid == tid.getId())&#123;  </span><br><span class="line">	                    <span class="comment">// 先把此页面从缓存中去除</span></span><br><span class="line">	                    Database.getBufferPool().discardPage(before.getId());  </span><br><span class="line">	                    <span class="comment">// 然后把旧数据写入Table文件</span></span><br><span class="line">	                    Database.getCatalog().getDatabaseFile(before.getId().getTableId()).writePage(before);  </span><br><span class="line">	                &#125;  </span><br><span class="line">	                <span class="keyword">break</span>;  </span><br><span class="line">	            <span class="keyword">case</span> CHECKPOINT_RECORD:  <span class="comment">// 跳过所有检查点记录</span></span><br><span class="line">	                <span class="type">int</span> <span class="variable">numXactions</span> <span class="operator">=</span> raf.readInt();  </span><br><span class="line">	                <span class="keyword">while</span> (numXactions-- &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">	                    <span class="type">long</span> <span class="variable">xid</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	                    <span class="type">long</span> <span class="variable">xoffset</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	                &#125;  </span><br><span class="line">	                <span class="keyword">break</span>;  </span><br><span class="line">	        &#125;  </span><br><span class="line">	  </span><br><span class="line">	        raf.readLong();  <span class="comment">// 跳过start指针</span></span><br><span class="line">	    &#125; <span class="keyword">catch</span> (EOFException e) &#123;  </span><br><span class="line">	        <span class="keyword">break</span>;  </span><br><span class="line">	    &#125;  </span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Recover-实现"><a href="#Recover-实现" class="headerlink" title="Recover 实现"></a>Recover 实现</h3><p><code>recover</code> 方法在数据库 crash 重启后调用，需要将检查点（如果有的话）中及其之后的所有事务进行恢复操作，未提交的 undo，已提交的 redo。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">recover</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"><span class="comment">// 省略synchronized结构</span></span><br><span class="line">	recoveryUndecided = <span class="literal">false</span>;  </span><br><span class="line">	  </span><br><span class="line">	<span class="comment">/* redo就是写入afterimage，undo就是写入beforeimage */</span>  </span><br><span class="line">	<span class="comment">// 已提交的事务ID集合</span></span><br><span class="line">	Set&lt;Long&gt; commitedIds = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();  </span><br><span class="line">	<span class="comment">// 检查点存储的活跃事务集合</span></span><br><span class="line">	Map&lt;Long, Long&gt; activeTxns = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();  </span><br><span class="line">	<span class="comment">// 从检查点往后所有事务的集合（所有的旧页面和新页面）  </span></span><br><span class="line">	Map&lt;Long, List&lt;Page&gt;&gt; beforePages = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();  </span><br><span class="line">	Map&lt;Long, List&lt;Page&gt;&gt; afterPages = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();  </span><br><span class="line">	  </span><br><span class="line">	<span class="type">long</span> <span class="variable">cpOffset</span> <span class="operator">=</span> raf.readLong();  <span class="comment">// 检查点位置  </span></span><br><span class="line">	<span class="keyword">if</span>(cpOffset != -<span class="number">1</span>)&#123;  </span><br><span class="line">	    raf.seek(cpOffset);  <span class="comment">// 如果有检查点，直接从此处开始</span></span><br><span class="line">	&#125;  </span><br><span class="line">	<span class="comment">// 顺序访问直到文件末尾</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">true</span>) &#123;  </span><br><span class="line">	    <span class="keyword">try</span> &#123;  </span><br><span class="line">	        <span class="type">int</span> <span class="variable">type</span> <span class="operator">=</span> raf.readInt();  <span class="comment">// 记录类型</span></span><br><span class="line">	        <span class="type">long</span> <span class="variable">record_tid</span> <span class="operator">=</span> raf.readLong();  <span class="comment">// TID</span></span><br><span class="line">	        <span class="keyword">switch</span> (type) &#123;  </span><br><span class="line">	            <span class="keyword">case</span> UPDATE_RECORD:  </span><br><span class="line">	                <span class="type">Page</span> <span class="variable">before</span> <span class="operator">=</span> readPageData(raf);  <span class="comment">// 旧数据</span></span><br><span class="line">	                <span class="type">Page</span> <span class="variable">after</span> <span class="operator">=</span> readPageData(raf);   <span class="comment">// 新数据</span></span><br><span class="line">	                beforePages.computeIfAbsent(record_tid, k-&gt;<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()).add(before);  </span><br><span class="line">	                afterPages.computeIfAbsent(record_tid, k-&gt;<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;()).add(after);  </span><br><span class="line">	                <span class="keyword">break</span>;  </span><br><span class="line">	            <span class="keyword">case</span> CHECKPOINT_RECORD:  </span><br><span class="line">	                <span class="type">int</span> <span class="variable">numXactions</span> <span class="operator">=</span> raf.readInt();  </span><br><span class="line">	                <span class="keyword">while</span> (numXactions-- &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">	                    <span class="type">long</span> <span class="variable">xid</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	                    <span class="type">long</span> <span class="variable">xoffset</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	                    activeTxns.put(xid, xoffset);  <span class="comment">// 记录活跃事务</span></span><br><span class="line">	                &#125;  </span><br><span class="line">	                <span class="keyword">break</span>;  </span><br><span class="line">	            <span class="keyword">case</span> COMMIT_RECORD:  </span><br><span class="line">	                commitedIds.add(record_tid);  <span class="comment">// 记录已提交事务</span></span><br><span class="line">	                <span class="keyword">break</span>;  </span><br><span class="line">	        &#125;  </span><br><span class="line">	  </span><br><span class="line">	        raf.readLong();  <span class="comment">// 跳过start指针</span></span><br><span class="line">	    &#125; <span class="keyword">catch</span> (EOFException e) &#123;  </span><br><span class="line">	        <span class="keyword">break</span>;  </span><br><span class="line">	    &#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">	  </span><br><span class="line">	<span class="comment">/* 注意undo和redo的顺序不能乱，否则redo被undo覆盖 */</span>  </span><br><span class="line">	</span><br><span class="line">	<span class="comment">// undo未commit的  </span></span><br><span class="line">	<span class="keyword">for</span>(Long record_id : beforePages.keySet())&#123;  </span><br><span class="line">	    <span class="keyword">if</span>(!commitedIds.contains(record_id))&#123;  </span><br><span class="line">	        List&lt;Page&gt; befores = beforePages.getOrDefault(record_id, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());  </span><br><span class="line">	        <span class="keyword">for</span>(Page page : befores)&#123;  </span><br><span class="line">	            Database.getCatalog().getDatabaseFile(page.getId().getTableId()).writePage(page);  </span><br><span class="line">	        &#125;  </span><br><span class="line">	    &#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">	  </span><br><span class="line">	<span class="comment">// redo已经commit的  </span></span><br><span class="line">	<span class="keyword">for</span>(Long record_tid : commitedIds)&#123;  </span><br><span class="line">	    List&lt;Page&gt; afters = afterPages.getOrDefault(record_tid, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());  </span><br><span class="line">	    <span class="keyword">for</span>(Page page : afters)&#123;  </span><br><span class="line">	        Database.getCatalog().getDatabaseFile(page.getId().getTableId()).writePage(page);  </span><br><span class="line">	    &#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">	  </span><br><span class="line">	<span class="comment">// 处理在checkpoint之前开始但是在checkpoint还未提交的事务  </span></span><br><span class="line">	<span class="keyword">for</span>(Map.Entry&lt;Long,Long&gt; entry : activeTxns.entrySet())&#123;  </span><br><span class="line">	    <span class="type">long</span> <span class="variable">active_id</span> <span class="operator">=</span> entry.getKey();  </span><br><span class="line">	    <span class="type">long</span> <span class="variable">active_offset</span> <span class="operator">=</span> entry.getValue();  </span><br><span class="line">	    <span class="type">boolean</span> <span class="variable">commited</span> <span class="operator">=</span> commitedIds.contains(active_id);  </span><br><span class="line">	    raf.seek(active_offset);  </span><br><span class="line">	    <span class="comment">// 代码与上文类似</span></span><br><span class="line">	    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;  </span><br><span class="line">	        <span class="keyword">try</span> &#123;  </span><br><span class="line">	            <span class="type">int</span> <span class="variable">type</span> <span class="operator">=</span> raf.readInt();  </span><br><span class="line">	            <span class="type">long</span> <span class="variable">record_tid</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	            <span class="keyword">switch</span> (type) &#123;  </span><br><span class="line">	                <span class="keyword">case</span> UPDATE_RECORD:  </span><br><span class="line">	                    <span class="type">Page</span> <span class="variable">before</span> <span class="operator">=</span> readPageData(raf);  </span><br><span class="line">	                    <span class="type">Page</span> <span class="variable">after</span> <span class="operator">=</span> readPageData(raf);  </span><br><span class="line">	                    <span class="keyword">if</span>(commited)&#123;  </span><br><span class="line">	                        <span class="comment">// redo  </span></span><br><span class="line">	                        Database.getCatalog().getDatabaseFile(after.getId().getTableId()).writePage(after);  </span><br><span class="line">	                    &#125;<span class="keyword">else</span>&#123;  </span><br><span class="line">	                        <span class="comment">// undo  </span></span><br><span class="line">	                        Database.getCatalog().getDatabaseFile(before.getId().getTableId()).writePage(before);  </span><br><span class="line">	                    &#125;  </span><br><span class="line">	                    <span class="keyword">break</span>;  </span><br><span class="line">	                <span class="keyword">case</span> CHECKPOINT_RECORD:  </span><br><span class="line">	                    <span class="type">int</span> <span class="variable">numXactions</span> <span class="operator">=</span> raf.readInt();  </span><br><span class="line">	                    <span class="keyword">while</span> (numXactions-- &gt; <span class="number">0</span>) &#123;  </span><br><span class="line">	                        <span class="type">long</span> <span class="variable">xid</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	                        <span class="type">long</span> <span class="variable">xoffset</span> <span class="operator">=</span> raf.readLong();  </span><br><span class="line">	                    &#125;  </span><br><span class="line">	                    <span class="keyword">break</span>;  </span><br><span class="line">	            &#125;  </span><br><span class="line">	            raf.readLong();  </span><br><span class="line">	        &#125; <span class="keyword">catch</span> (EOFException e) &#123;  </span><br><span class="line">	            <span class="keyword">break</span>;  </span><br><span class="line">	        &#125;  </span><br><span class="line">	    &#125;  </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>需要注意 undo 和 redo 的顺序不能颠倒，否则会出现数据覆盖问题。</li>
+</ul>
+
+
+
+
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/11/15/Lab%205/">MIT6.830 SimpleDB 实现笔记 Lab 5</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/11/15/Lab%202/">MIT6.830 SimpleDB 实现笔记 Lab 2</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@zyrate</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>

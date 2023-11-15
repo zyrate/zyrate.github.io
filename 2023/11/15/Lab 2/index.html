@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 5.4.2">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>MIT6.830 SimpleDB 实现笔记 Lab 2 - ZYR的博客</title>
+
+  
+    <meta name="description" content="Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 Operator（OpIterator）类，它们会：  接受一个 child OpIterator，用以读取（遍历）目标数据； 接受一些控制该算子的参数； 同时实现 hasNext()、next() 等供外界遍历的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT6.830 SimpleDB 实现笔记 Lab 2">
+<meta property="og:url" content="https://zyrate.github.io/2023/11/15/Lab%202/index.html">
+<meta property="og:site_name" content="ZYR的博客">
+<meta property="og:description" content="Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 Operator（OpIterator）类，它们会：  接受一个 child OpIterator，用以读取（遍历）目标数据； 接受一些控制该算子的参数； 同时实现 hasNext()、next() 等供外界遍历的方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230715113426.png">
+<meta property="article:published_time" content="2023-11-15T13:48:54.521Z">
+<meta property="article:modified_time" content="2023-11-15T01:50:43.000Z">
+<meta property="article:author" content="Yunrui Zheng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230715113426.png">
+  
+  
+  
+  
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="ZYR的博客" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/%E7%8C%B4%E5%AD%90.svg">
+  
+
+  
+
+  
+
+
+  
+    
+      <link href="https://npm.elemecdn.com/lxgw-wenkai-screen-webfont/lxgwwenkaiscreen.css" rel="stylesheet">
+    
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">ZYR的博客</div><div class="sub cap">为者常成，行者常至</div></a></div>
+
+<nav class="menu dis-select"></nav>
+</header>
+
+
+<div class="widgets">
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">MIT6.830 SimpleDB 实现笔记 Lab 2</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Exercise-1"><span class="toc-text">Exercise 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exercise-2"><span class="toc-text">Exercise 2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exercise-3-4"><span class="toc-text">Exercise 3, 4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exercise-5"><span class="toc-text">Exercise 5</span></a></li></ol></div></div></widget>
+
+
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/zyrate" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/social/08a41b181ce68.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-11-15T13:48:54.521Z">2023-11-15</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>MIT6.830 SimpleDB 实现笔记 Lab 2</span></h1>
+<p>Lab2 总共有 5 个 exercise，主要练习了与执行计划相关的各种 execution 操作。比如过滤、连接、聚合、插入、删除等操作。每一个操作算子都继承了 <code>Operator</code>（OpIterator）类，它们会：</p>
+<ul>
+<li>接受一个 child <code>OpIterator</code>，用以读取（遍历）目标数据；</li>
+<li>接受一些控制该算子的参数；</li>
+<li>同时实现 <code>hasNext()</code>、<code>next()</code> 等供外界遍历的方法。</li>
+</ul>
+<span id="more"></span>
+<h3 id="Exercise-1"><a href="#Exercise-1" class="headerlink" title="Exercise 1"></a>Exercise 1</h3><hr>
+<ul>
+<li>src/java/simpledb/execution/Predicate.java</li>
+<li>src/java/simpledb/execution/JoinPredicate.java</li>
+<li>src/java/simpledb/execution/Filter.java</li>
+<li>src/java/simpledb/execution/Join.java</li>
+</ul>
+<hr>
+<p>谓词和连接谓词的作用是根据指定的 <strong>field 、操作符和操作数</strong>来判断某一个 Tuple 是否需要过滤。而 <code>Filter</code> 和 <code>Join</code> 算子则遍历 child 数据，利用上述谓词来进行来进行过滤，返回留下来的 Tuple。实现起来比较简单。</p>
+<p>这里有个注意的点是，每个实现了 <code>Operator</code> 的算子都要重写 <code>getTupleDesc()</code> 方法，生成该算子每次 <code>next()</code> 后返回的元组结构描述。比如 Join 算子返回的是两个元组合并后的结构：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> TupleDesc <span class="title function_">getTupleDesc</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> TupleDesc.merge(child1.getTupleDesc(), child2.getTupleDesc());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Exercise-2"><a href="#Exercise-2" class="headerlink" title="Exercise 2"></a>Exercise 2</h3><hr>
+<ul>
+<li>src/java/simpledb/execution/IntegerAggregator.java</li>
+<li>src/java/simpledb/execution/StringAggregator.java</li>
+<li>src/java/simpledb/execution/Aggregate.java</li>
+</ul>
+<hr>
+<p><code>IntegerAggregater</code> 和 <code>StringAggregator</code> 是具体类型的聚合器，它们的作用是在聚合算子 <code>Aggregate</code> 遍历表的过程中<strong>统计分组（group）信息</strong>并得到最终聚合结果。Integer 类型有五种基本聚合操作：MIN, MAX, SUM, AVG, COUNT，而 String 类型只有 COUNT 一种。不同的聚合操作进行不同的计算即可。</p>
+<h3 id="Exercise-3-4"><a href="#Exercise-3-4" class="headerlink" title="Exercise 3, 4"></a>Exercise 3, 4</h3><hr>
+<ul>
+<li>src/java/simpledb/storage/HeapPage.java</li>
+<li>src/java/simpledb/storage/HeapFile.java</li>
+<li>src/simpledb/BufferPool.java<ul>
+<li>insertTuple()</li>
+<li>deleteTuple()</li>
+</ul>
+</li>
+<li>src/java/simpledb/execution/Insert.java</li>
+<li>src/java/simpledb/execution/Delete.java</li>
+</ul>
+<hr>
+<p>练习 3 和练习 4 要求实现 HeapFile 和 HeapPage 的可变性，即可以随时插入、删除元组，并且实现 <code>Insert</code> 和 <code>Delete</code> 算子。</p>
+<p>首先，向 HeapPage 中插入元组需要根据 header 标志位找到一个空闲 slot，在插入后（数组赋值）header 对应位置标志为 1；删除元组则反之。因为 header 使用 byte 数组存储的，所以需要一定算法将对应 byte 取出更改某一位值后再放回：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">markSlotUsed</span><span class="params">(<span class="type">int</span> i, <span class="type">boolean</span> value)</span> &#123;</span><br><span class="line">	<span class="type">byte</span> <span class="variable">markBit</span> <span class="operator">=</span> value?(<span class="type">byte</span>)<span class="number">1</span>:<span class="number">0</span>;</span><br><span class="line">	<span class="type">byte</span> <span class="variable">oldByte</span> <span class="operator">=</span> header[i/<span class="number">8</span>];</span><br><span class="line">	<span class="type">byte</span> <span class="variable">newByte</span> <span class="operator">=</span> (<span class="type">byte</span>) <span class="number">0</span> ;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> pos=<span class="number">7</span>; pos&gt;=<span class="number">0</span>; pos--)&#123; <span class="comment">// 这里注意顺序</span></span><br><span class="line">		<span class="type">byte</span> <span class="variable">originBit</span> <span class="operator">=</span> (<span class="type">byte</span>) (oldByte &gt;&gt; pos &amp; <span class="number">1</span>); <span class="comment">// 不变的bit</span></span><br><span class="line">		<span class="keyword">if</span>(pos == i%<span class="number">8</span>)&#123; <span class="comment">// 到了要设置的bit</span></span><br><span class="line">			newByte |= markBit;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			newByte |= originBit;</span><br><span class="line">		&#125;</span><br><span class="line">		newByte &lt;&lt;= pos!=<span class="number">0</span>?<span class="number">1</span>:<span class="number">0</span>; <span class="comment">// 除了最后一位，填充后左移</span></span><br><span class="line">	&#125;</span><br><span class="line">	header[i/<span class="number">8</span>] = newByte;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HeapFile 的插入方法需要遍历所有的 HeapPage，判断页面是否有空闲 slot，如果有的话，调用该页的 insert 方法，如果所有页面都无空闲，就要新建一个页面再行插入。</p>
+<p>而最终所有的应用程序在插入元组时，是调用 BufferPool 的方法。BufferPool 调用 HeapFile 的 insert 方法，接收一个 Page 列表，存储所有被影响的页面（如果不考虑副本的话只有 1 个页面）。这些页面就是所谓的<strong>脏页（dirty page）</strong>，即在缓存中发生了改动但还没有同步到硬盘中的页面。BufferPool 需要将这些页面标记为“脏页”。</p>
+<p>BufferPool、HeapFile、HeapPage 之间<strong>必须遵循</strong>固定的调用关系：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230715113426.png" alt="image.png"/></div><div class="image-meta"><span class="image-caption center">image.png</span></div></div>
+
+<h3 id="Exercise-5"><a href="#Exercise-5" class="headerlink" title="Exercise 5"></a>Exercise 5</h3><hr>
+<ul>
+<li>src/java/simpledb/storage/BufferPool.java<ul>
+<li>evictPage()</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>练习 5 要求在缓冲区满了以后实现<strong>页面置换算法</strong>。因为之前没有考虑这个功能所以 <code>getPage()</code> 方法要重新写。</p>
+<p>最常见的置换算法是 LRU（最近最久未使用算法），实现它可以用一个 List，每次访问一个页面就把它放到表尾，这样需要同置换时，表头的页面就是最近最久未使用的，直接逐出。</p>
+<p>然而仅仅用一个 List，在访问页面时还需要遍历查找，不如 HashMap 高效，但是仅仅用 HashMap 又无法实现算法要求。所以我将两者结合，在 List 存储 Page 实体的情况下，额外采用一个 HashMap 存储 PageId 到 List 下标的映射，List 有任何变动时 Map 也随之变化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ArrayList&lt;Page&gt; pageCache; <span class="comment">// 页面缓存</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> numPages; <span class="comment">// 页面缓存上限</span></span><br><span class="line"><span class="keyword">private</span> Map&lt;PageId, Integer&gt; pageIndexes; <span class="comment">// 页面下标 - 为了加快读取，用Map实现快速 get by ID</span></span><br></pre></td></tr></table></figure>
+<p>这样在页面查找时可以快速定位下标，但是有一个新的问题是 List 删除某一元素后，这一元素后面的下标全都要减一，这样 Map 中的对应 value 也要减一，带来了时间上的开销。不过我暂时想不到其他好的解决办法了。</p>
+<p>—更新—</p>
+<p>为了实现 O(1) 级别的 GET、PUT 操作和灵活置换，重新定义了 PageCache 类，手动实现双向链表，结合 HashMap，实现了 LRU 算法。</p>
+
+
+
+
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/11/15/Lab%206/">MIT6.830 SimpleDB 实现笔记 Lab 6</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/11/13/Lab%204/">MIT6.830 SimpleDB 实现笔记 Lab 4</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@zyrate</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
