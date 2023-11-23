@@ -26,7 +26,7 @@
     <meta name="description" content="Lab 5 要求实现 SimpleDB 的 B+树索引存储机制。整体的 B+树相关代码还是较为复杂的，但是 SimpleDB 帮我们写了大部分结构性的代码，让我们去完成较重要的功能性代码。但是所有的代码都需要理解透彻。 B+树索引结构首先，在 InnoDB 引擎中，B+树索引分为主索引和辅助索引，主索引的叶子结点记录着完整的数据，而辅助索引的叶子结点只记录着主键的值，在查找时需要先插找到主键值，再">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MIT6.830 SimpleDB 实现笔记 Lab 5">
-<meta property="og:url" content="https://zyrate.github.io/2023/10/31/Lab%205/index.html">
+<meta property="og:url" content="https://zyrate.github.io/2023/11/07/Lab%205/index.html">
 <meta property="og:site_name" content="ZYR的博客">
 <meta property="og:description" content="Lab 5 要求实现 SimpleDB 的 B+树索引存储机制。整体的 B+树相关代码还是较为复杂的，但是 SimpleDB 帮我们写了大部分结构性的代码，让我们去完成较重要的功能性代码。但是所有的代码都需要理解透彻。 B+树索引结构首先，在 InnoDB 引擎中，B+树索引分为主索引和辅助索引，主索引的叶子结点记录着完整的数据，而辅助索引的叶子结点只记录着主键的值，在查找时需要先插找到主键值，再">
 <meta property="og:locale" content="zh_CN">
@@ -35,8 +35,8 @@
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231111205416.png">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231111212307.png">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231111212338.png">
-<meta property="article:published_time" content="2023-10-31T13:48:54.000Z">
-<meta property="article:modified_time" content="2023-11-15T14:25:19.000Z">
+<meta property="article:published_time" content="2023-11-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-23T14:40:07.089Z">
 <meta property="article:author" content="Yunrui Zheng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231019161522.png">
@@ -110,7 +110,7 @@
 
 
 
-<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-10-31T13:48:54.000Z">2023-10-31</time></div></div>
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2023-11-06T16:00:00.000Z">2023-11-07</time></div></div>
 
 <article class='md-text content post'>
 <h1 class="article-title"><span>MIT6.830 SimpleDB 实现笔记 Lab 5</span></h1>
@@ -195,7 +195,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/11/15/Lab%206/">MIT6.830 SimpleDB 实现笔记 Lab 6</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/10/20/Lab%204/">MIT6.830 SimpleDB 实现笔记 Lab 4</a></div></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2023/11/15/Lab%206/">MIT6.830 SimpleDB 实现笔记 Lab 6</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/10/25/Lab%204/">MIT6.830 SimpleDB 实现笔记 Lab 4</a></div></section></div>
 
 
 
