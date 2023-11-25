@@ -20,31 +20,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   
-  <title>MIT6.830 SimpleDB 实现笔记 Lab 1 - ZYR的博客</title>
+  <title>MIT6.830 SimpleDB 实现笔记 Lab 1 - 万木只鸟</title>
 
   
     <meta name="description" content="6.830是麻省理工学院（简称 MIT）的一门计算机科学课程，全名为”6.830: Database Systems”。该课程是关于数据库系统的高级课程，旨在教授学生关于数据库的设计、实现和优化的知识和技能。 课程附带了6个Lab以供练习，最终目的是使学生能够用Java写出一个简易数据库系统，这6个Lab由浅入深，覆盖了数据库的核心知识点。 Lab1 总共有 6 个 exercise，主要是练习的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MIT6.830 SimpleDB 实现笔记 Lab 1">
 <meta property="og:url" content="https://zyrate.github.io/2023/08/09/Lab%201/index.html">
-<meta property="og:site_name" content="ZYR的博客">
+<meta property="og:site_name" content="万木只鸟">
 <meta property="og:description" content="6.830是麻省理工学院（简称 MIT）的一门计算机科学课程，全名为”6.830: Database Systems”。该课程是关于数据库系统的高级课程，旨在教授学生关于数据库的设计、实现和优化的知识和技能。 课程附带了6个Lab以供练习，最终目的是使学生能够用Java写出一个简易数据库系统，这6个Lab由浅入深，覆盖了数据库的核心知识点。 Lab1 总共有 6 个 exercise，主要是练习的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230705211424.png">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231124161515.png">
 <meta property="article:published_time" content="2023-08-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-11-24T08:15:22.000Z">
+<meta property="article:modified_time" content="2023-11-25T03:35:22.957Z">
 <meta property="article:author" content="Yunrui Zheng">
+<meta property="article:tag" content="技术博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20230705211424.png">
   
   
   
-  
+  <meta name="keywords" content="技术博客">
 
   <!-- feed -->
   
-    <link rel="alternate" href="/atom.xml" title="ZYR的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="万木只鸟" type="application/atom+xml">
   
 
   
@@ -81,7 +82,7 @@
 
   
 
-<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">ZYR的博客</div><div class="sub cap">为者常成，行者常至</div></a></div>
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">万木只鸟</div><div class="sub cap">为者常成，行者常至</div></a></div>
 
 <nav class="menu dis-select"></nav>
 </header>
@@ -148,8 +149,9 @@
 <ol>
 <li>硬盘中的页面（也可以叫块 block）</li>
 <li>操作系统中的页面</li>
-<li>数据库中的页面<br>Page 是数据库向硬盘中读取和写入一次数据的最小单位，一般来说数据库的页面比底层的页面要大一些，所以需要我们自己写一些逻辑来保证操作的原子性（暂时不需要）。</li>
+<li>数据库中的页面</li>
 </ol>
+<p>Page 是数据库向硬盘中读取和写入一次数据的最小单位，一般来说数据库的页面比底层的页面要大一些，所以需要我们自己写一些逻辑来保证操作的原子性（暂时不需要）。</p>
 <p>每次通过 PageId（存储 tableId 和 pageNo）来获取页面。首先查找缓存，没有的话就通过 Catalog 获取 DbFile 读取页面并加入缓存。如果缓存占满，就要进行页面置换（暂时不需要）。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Page <span class="title function_">getPage</span><span class="params">(TransactionId tid, PageId pid, Permissions perm)</span></span><br><span class="line">	<span class="keyword">throws</span> TransactionAbortedException, DbException &#123;</span><br><span class="line">	<span class="type">Page</span> <span class="variable">res</span> <span class="operator">=</span> idToPage.get(pid);</span><br><span class="line">	<span class="keyword">if</span>(res == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="type">Catalog</span> <span class="variable">catalog</span> <span class="operator">=</span> Database.getCatalog();</span><br><span class="line">		<span class="type">DbFile</span> <span class="variable">f</span> <span class="operator">=</span> catalog.getDatabaseFile(pid.getTableId());</span><br><span class="line">		res = f.readPage(pid);</span><br><span class="line">		idToPage.put(pid, res);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
