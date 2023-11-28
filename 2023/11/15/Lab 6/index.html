@@ -20,14 +20,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   
-  <title>MIT6.830 SimpleDB 实现笔记 Lab 6 - 万木只鸟</title>
+  <title>MIT6.830 SimpleDB 实现笔记 Lab 6 - 小博客</title>
 
   
     <meta name="description" content="Lab 6 实现 SimpleDB 的基于日志系统的回滚（rollback）和恢复（recover）功能。 WAL 机制首先，SimpleDB 要实现的是预写式日志（Write-ahead logging, WAL），也就是所有修改在生效之前都要先写入 log 文件中，写入的内容包括 redo 和 undo 信息，分别保证事务的持久性和原子性。 在 SimpleDB 中，日志的单位和锁一样是页面，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MIT6.830 SimpleDB 实现笔记 Lab 6">
 <meta property="og:url" content="https://zyrate.github.io/2023/11/15/Lab%206/index.html">
-<meta property="og:site_name" content="万木只鸟">
+<meta property="og:site_name" content="小博客">
 <meta property="og:description" content="Lab 6 实现 SimpleDB 的基于日志系统的回滚（rollback）和恢复（recover）功能。 WAL 机制首先，SimpleDB 要实现的是预写式日志（Write-ahead logging, WAL），也就是所有修改在生效之前都要先写入 log 文件中，写入的内容包括 redo 和 undo 信息，分别保证事务的持久性和原子性。 在 SimpleDB 中，日志的单位和锁一样是页面，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20231124161613.png">
@@ -44,7 +44,7 @@
 
   <!-- feed -->
   
-    <link rel="alternate" href="/atom.xml" title="万木只鸟" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="小博客" type="application/atom+xml">
   
 
   
@@ -81,7 +81,7 @@
 
   
 
-<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">万木只鸟</div><div class="sub cap">为者常成，行者常至</div></a></div>
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">小博客</div><div class="sub cap">为者常成，行者常至</div></a></div>
 
 <nav class="menu dis-select"></nav>
 </header>
