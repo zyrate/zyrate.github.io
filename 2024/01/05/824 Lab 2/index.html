@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+
+<head>
+  <meta name="generator" content="Hexo 5.4.2">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0">
+  <meta charset="utf-8">
+  
+
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#f8f8f8">
+  
+  <title>MIT6.824 分布式系统课程实验笔记 Lab 2 - zyrate's Blog</title>
+
+  
+    <meta name="description" content="Lab 2、3、4 是一个系列，最终需要实现一个可容错、可分片的分布式 K-V 数据库，该数据库的底层基于分布式共识算法 Raft。Lab 2 的目标就是实现 Raft 底层协议，以支持数据库的分布式、多副本、一致性的需求。 Raft 算法Raft 算法的提出就是为了解决之前的分布式共识算法 Paxos 可理解性较差、不易实现的问题。但即便如此，Raft 算法理解、实现起来也并不简单，并且有很多需">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT6.824 分布式系统课程实验笔记 Lab 2">
+<meta property="og:url" content="https://zyrate.github.io/2024/01/05/824%20Lab%202/index.html">
+<meta property="og:site_name" content="zyrate&#39;s Blog">
+<meta property="og:description" content="Lab 2、3、4 是一个系列，最终需要实现一个可容错、可分片的分布式 K-V 数据库，该数据库的底层基于分布式共识算法 Raft。Lab 2 的目标就是实现 Raft 底层协议，以支持数据库的分布式、多副本、一致性的需求。 Raft 算法Raft 算法的提出就是为了解决之前的分布式共识算法 Paxos 可理解性较差、不易实现的问题。但即便如此，Raft 算法理解、实现起来也并不简单，并且有很多需">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240119090836.png">
+<meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240122112433.png">
+<meta property="og:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240311203348.png">
+<meta property="article:published_time" content="2024-01-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-12T10:00:04.235Z">
+<meta property="article:author" content="Yunrui Zheng">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="mit6824">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240119090836.png">
+  
+  
+  
+  <meta name="keywords" content="go,mit6824,分布式">
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="zyrate's Blog" type="application/atom+xml">
+  
+
+  
+    
+<link rel="stylesheet" href="/css/main.css">
+
+  
+
+  
+    <link rel="shortcut icon" href="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/%E7%82%B9%E7%81%AB%E6%9F%B4.svg">
+  
+
+  
+
+  
+
+
+  
+    
+      <link href="https://gcore.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/lxgwwenkaiscreen.css" rel="stylesheet">
+    
+  
+</head>
+
+<body>
+  
+
+
+
+
+  <div class='l_body' id='start'>
+    <aside class='l_left' layout='post'>
+    
+
+  
+
+<header class="header"><div class="logo-wrap"><a class="title" href="/"><div class="main" ff="title">zyrate's Blog</div><div class="sub cap">为者常成，行者常至</div></a></div>
+
+<nav class="menu dis-select"></nav>
+</header>
+
+
+<div class="widgets">
+<widget class="widget-wrapper search"><div class="widget-body"><div class="search-wrapper" id="search"><form class="search-form"><input type="text" class="search-input" id="search-input" data-filter="/blog/" placeholder="文章搜索"><svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div></div></widget>
+
+
+<widget class="widget-wrapper toc single" id="data-toc"><div class="widget-header cap dis-select"><span class="name">MIT6.824 分布式系统课程实验笔记 Lab 2</span></div><div class="widget-body fs14"><div class="doc-tree active"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Raft-%E7%AE%97%E6%B3%95"><span class="toc-text">Raft 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E5%89%AF%E6%9C%AC%E9%9B%86%E7%BE%A4"><span class="toc-text">多副本集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%A4%87%E5%90%8C%E6%AD%A5"><span class="toc-text">主备同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%B1%E8%AF%86"><span class="toc-text">分布式共识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Raft-%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0"><span class="toc-text">Raft 算法概述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%86%E5%AF%BC%E8%80%85%E9%80%89%E4%B8%BE"><span class="toc-text">领导者选举</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%A4%8D%E5%88%B6"><span class="toc-text">日志复制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-text">安全性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lab-%E8%A6%81%E6%B1%82"><span class="toc-text">Lab 要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%97%AE%E9%A2%98"><span class="toc-text">关键问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A-Leader-%E9%94%99%E8%AF%AF"><span class="toc-text">多 Leader 错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E6%97%B6%E5%8A%9F%E8%83%BD%E8%AE%BE%E8%AE%A1"><span class="toc-text">计时功能设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Log-%E5%AD%98%E5%82%A8%E9%97%AE%E9%A2%98"><span class="toc-text">Log 存储问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E6%A3%80%E6%9F%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">一致性检查的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%8F%90%E4%BA%A4%E7%8A%B6%E6%80%81"><span class="toc-text">如何判断提交状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BB%80%E4%B9%88"><span class="toc-text">持久化需要注意什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E7%85%A7%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BB%80%E4%B9%88"><span class="toc-text">快照需要注意什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E7%9A%84%E9%9A%BE%E7%82%B9"><span class="toc-text">分布式应用开发的难点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="toc-text">具体实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Raft-%E5%AF%B9%E8%B1%A1%E7%BB%93%E6%9E%84"><span class="toc-text">Raft 对象结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E6%97%B6%E9%80%89%E4%B8%BE%E5%AE%9E%E7%8E%B0"><span class="toc-text">超时选举实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leader-%E5%BF%83%E8%B7%B3%E5%AE%9E%E7%8E%B0"><span class="toc-text">Leader 心跳实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E6%81%A2%E5%A4%8D%E5%92%8C%E5%90%8C%E6%AD%A5%E5%AE%9E%E7%8E%B0"><span class="toc-text">快速恢复和同步实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leader-%E6%8F%90%E4%BA%A4%E5%88%A4%E6%96%AD"><span class="toc-text">Leader 提交判断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Follower-%E5%A4%84%E7%90%86%E6%97%A5%E5%BF%97%E5%90%8C%E6%AD%A5"><span class="toc-text">Follower 处理日志同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5-apply-%E5%AE%9E%E7%8E%B0"><span class="toc-text">异步 apply 实现</span></a></li></ol></li></ol></div></div></widget>
+
+
+
+
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/zyrate" target="_blank" rel="external nofollow noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/social/08a41b181ce68.svg"/></a></div></footer>
+
+    </aside>
+    <div class='l_main'>
+      
+
+      
+
+
+
+<div class="bread-nav fs12"><div id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a><span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div><div id="post-meta">发布于&nbsp;<time datetime="2024-01-04T16:00:00.000Z">2024-01-05</time></div></div>
+
+<article class='md-text content post'>
+<h1 class="article-title"><span>MIT6.824 分布式系统课程实验笔记 Lab 2</span></h1>
+<p>Lab 2、3、4 是一个系列，最终需要实现一个可容错、可分片的分布式 K-V 数据库，该数据库的底层基于分布式共识算法 Raft。Lab 2 的目标就是实现 Raft 底层协议，以支持数据库的<strong>分布式、多副本、一致性</strong>的需求。</p>
+<h2 id="Raft-算法"><a href="#Raft-算法" class="headerlink" title="Raft 算法"></a>Raft 算法</h2><p>Raft 算法的提出就是为了解决之前的分布式共识算法 Paxos 可理解性较差、不易实现的问题。但即便如此，Raft 算法理解、实现起来也并不简单，并且有很多需要注意的细节问题。Raft 算法<strong>设计的目的是什么</strong>？本节先从分布式副本集群、主备同步、分布式共识等几个方面进行简单的梳理。</p>
+<h3 id="多副本集群"><a href="#多副本集群" class="headerlink" title="多副本集群"></a>多副本集群</h3><p>多副本集群是分布式系统能够正常运行的基础。我们构建分布式系统可能有多个原因，比较主要的两个原因就是：<strong>并行计算</strong>和<strong>容错</strong>。这两者之间是有一定因果关系的，如下面的逻辑推演：</p>
+<ol>
+<li>单体应用想要提高性能 ——&gt; 并行计算</li>
+<li>并行计算需要将数据划分后同时进行 ——&gt; 构建服务器集群</li>
+<li>构建集群后不可避免地会出现单点故障 ——&gt; 使集群能够自动容错</li>
+<li>容错要求出现故障后数据不丢失 ——&gt; 每个数据复制多个副本</li>
+<li>数据的多个副本必须保持一致性 –&gt; 每个副本之间需要进行同步</li>
+<li>副本同步带来额外的开销 –&gt; 降低了整体性能</li>
+</ol>
+<p>可以看到，最终的结果可能和最初的设想有些矛盾，也就是说为了保证多副本之间的一致性，就必须牺牲掉一定的性能。分布式系统的设计需要在它们之间进行权衡，在能够达到可接受的容错性的同时减少性能的损耗。</p>
+<h3 id="主备同步"><a href="#主备同步" class="headerlink" title="主备同步"></a>主备同步</h3><p>关于如何设计多副本系统，有很多不同的实现，但是基本都离不开<strong>主备同步</strong>。</p>
+<p>也就是有一份主数据（Primary）和多份备份数据（Backup），这里的“数据”是抽象层面的，可以是任何需要多副本的对象，也可代表承载对象的服务器节点。平时我们处理和更新 Primary，同时让 Backup 与 Primary 保持同步，当 Primary 所在的节点故障后可以立刻启用 Backup，而不用等待故障恢复。（需要注意的是，<strong>外部调用者不应当感知到数据有多个副本</strong>）</p>
+<p>关于主备之间的同步，有两种方案：</p>
+<ol>
+<li><strong>State transfer，状态转移</strong>。Primary 将自己完整状态，比如说内存中的内容，拷贝并发送给 Backup。Backup 会保存收到的最近一次状态。</li>
+<li><strong>Replicated state machine，复制状态机</strong>。使服务器状态发生改变的往往是<strong>外部事件</strong>，这个方案不会在不同的副本之间发送完整状态，只会从 Primary 将这些外部事件，例如外部的输入、增删改查，发送给 Backup，从而达到状态同步。</li>
+</ol>
+<p>上面两种方案人们更亲向于后者，因为需要传递的数据更少，但是它实现起来更复杂一些，也会受并行计算的影响（比如在多核处理器上，同样的外部命令可能得到不同的结果，如随机数）。</p>
+<p>不论哪种主备同步，都需要进行良好的<strong>输出控制（Output Rule）</strong>，防止出现<em>外部更新了 Primary，副本因为网络问题没有及时同步数据，而外部已经收到了更新结果</em>的情况。所以大部分的分布式副本系统都涉及到 Primary 停下来等待 Backup 的问题。Raft 算法也不例外。</p>
+<h3 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h3><p>在多副本集群中，Primary 应当只有一个，否则会出现<strong>脑裂</strong>。但是多个节点究竟让谁作 Primary 呢？不同的设计思想可能有不同的实现，但是不管怎样只要是通过<strong>单服务</strong>去决定谁是 Primary 就是有问题的，因为它又会引出<strong>单点故障</strong>，是不可靠的，哪怕这个服务本身也是多副本。比如下面的设计思想：</p>
+<p>多个副本通过<strong>Test-And-Set</strong>服务（TAS 服务本身也是多副本的）去请求当 Primary（类似请求获取分布式锁），最终应该只有一个请求成功。但是在分布式环境下网络是不可靠的，可能会出现下面的情况：</p>
+<p>如果有两个客户端 C1，C2 请求成为主副本，有两个 TAS 服务器 S1，S2。当一个客户端能和一个服务器通信而不能和另外一个通信的时候，就可能会发生脑裂问题。此时客户端有两种选择：</p>
+<ol>
+<li>依次询问所有服务器 S1、S2，等待它们的响应。但这样就失去了<strong>容错</strong>的意义，因为只要有一台服务器坏掉，系统就无法正常运行；而且，<strong>一个好的多副本服务是不应该让客户端意识到有多个副本的。</strong></li>
+<li>认为自己无法与其通信的服务器 S2 已经宕机了，所以其他服务器也一定发现了这个问题，所以可以只去 S1 服务器请求。但是这个想法是错误的，因为 S2 很可能没有宕机，而是由于网络问题， C1 只能通信 S1，C2 只能通信 S2，这样很容易就形成<strong>脑裂</strong>了。</li>
+</ol>
+<p>虽然上面的设计思想在现实生活中可以较好地运行，只要保证集群网络正常就行，但是毕竟是不完美的。</p>
+<p>因此，像 Paxos、Raft、ZAB 这类靠“ <strong>过半票决</strong>  ”思想来保证主备一致性的<strong>分布式共识算法</strong>就被提了出来。</p>
+<h3 id="Raft-算法概述"><a href="#Raft-算法概述" class="headerlink" title="Raft 算法概述"></a>Raft 算法概述</h3><p>Raft 算法本身是一个<strong>复制状态机</strong>架构，其中的外部事件它称为日志（log），日志是有时间顺序的，不同的节点之间只要日志是一致的，那么状态就是一致的。所以 Raft 算法最重要的部分就是日志的<strong>正确同步</strong>。</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240119090836.png" alt="image.png"/></div><div class="image-meta"><span class="image-caption center">image.png</span></div></div>
+<p>图中的<strong>State Machine</strong>部分其实就是需要保证分布式一致性的数据，在不同的应用中指代的对象可能是不同的。比如在分布式 KV 数据库中，它可能存储的就是键和值；在分布式消息队列中，它可能存储的就是消息的状态。Raft 算法并不知道每一条 Log 代表的含义，也不知道状态机目前的状态，它只保证不同节点之间的状态机是一致的。所以 Raft 算法处于一个所有应用共性的位置，也就是上图②和③所代表的流程。</p>
+<p>Raft 算法解决了三个子问题：领导者选举、日志复制、安全性。</p>
+<h4 id="领导者选举"><a href="#领导者选举" class="headerlink" title="领导者选举"></a>领导者选举</h4><p>每个节点可能的状态：follower, candidate, leader</p>
+<p>leader 的作用是协调所有的 follower 进行正确的日志同步，并响应上层的事件输入。它通过<strong>心跳</strong>来在集群中维护自己的“统治地位”。但是如何避免上文所述的<strong>单点故障</strong>呢？如果 leader 断连或者宕机了，那么需要在剩下的 follower 中选择一个新的 leader，选举的规则就是某一个 follower 转变为 candidate，然后让其他节点为自己投票，如果所获同意的票数超过节点总数（包括宕机和断连的）的<strong>一半</strong>（大多数），那么该节点就成为了新的 leader。为了区分新旧 leader ，Raft 采用了任期（Term）的概念，所有旧 Term 的消息都应当被舍弃。在同一个 Term 中，一个 follower 只能给一个 candidate 投票。</p>
+<p>为了尽量避免<strong>选举分裂</strong>的情况，Raft 规定每个 follower 在收不到 leader 心跳的<strong>随机</strong>一段时间后发起新一轮选举。节点的状态转换如下图：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240122112433.png" alt="image.png"/></div><div class="image-meta"><span class="image-caption center">image.png</span></div></div>
+<p>在 Raft 中，只要 Term 合法，follower 对于 leader 必须无条件服从，所以对 candidate 的投票必须谨慎，因为投票规则决定了数据的安全性。</p>
+<h4 id="日志复制"><a href="#日志复制" class="headerlink" title="日志复制"></a>日志复制</h4><p>日志复制是 Raft 算法中最重要的部分，需要保证无论是 follower 还是 leader 在宕机重启后经过一定的机制使得日志重新一致。日志的产生来自于客户端（外部）的命令，客户端与 leader 进行交互，它向 leader 发出一个命令，leader 产生一个日志，然后 leader 向 follower 进行同步，当集群中超过半数的 follower 都收到日志后，leader 向客户端通知操作成功。</p>
+<p>这有点像<strong>两阶段提交（2 PC）</strong> 但并不完全是，这里的提交指的是集群的一种状态，也就是某个日志如果达成了<strong>群体一致性</strong>，那么集群就可以将这个日志的状态设置为已提交，leader 向状态机 apply 某个操作进而通知客户端操作成功的前提是该日志已经提交。</p>
+<p>如果 leader 和 follower 都不出错，并且网络正常，那么底层 Raft 的流程就是下面的步骤：</p>
+<ol>
+<li>leader 接收客户端操作命令</li>
+<li>leader 将命令转化为一条日志追加到本地</li>
+<li>leader 向所有的 follower 发起日志追加请求</li>
+<li>follower 收到请求后追加新日志到本地，返回成功与否</li>
+<li>leader 在收到<strong>过半</strong>的 follower 追加成功的答复后，将本地该日志设置为已提交，并向上层状态机 apply</li>
+<li>leader 状态机返回客户端此次操作的结果</li>
+<li>leader 通过心跳向 follower 广播该日志的提交状态</li>
+<li>follower 收到心跳同样将本地的该日志设置为已提交，并向上层状态机 apply</li>
+</ol>
+<p>这样一来，所有节点的本地日志、状态机状态都是一致的。但是，分布式环境下 leader、follower、网络状态都可能频繁出错，所以实际的日志复制情况并没有这么简单，需要考虑数据的恢复，并保证安全性和一致性。</p>
+<h4 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h4><p>Raft 需要一定的规则来保证数据的安全性和一致性。</p>
+<p>安全性主要指客户端已经收到处理成功的操作不能因为集群的某些节点宕机而丢失或被覆盖。具体来说的话可以分为：<strong>投票安全性</strong>、<strong>复制安全性</strong>、<strong>提交安全性</strong>。</p>
+<p>投票安全性：</p>
+<ul>
+<li>follower 在每个 Term 只能对一个 candidate 投票</li>
+<li>不能选日志的 Term 和 Index 落后自己的节点作为 leader</li>
+</ul>
+<p>复制安全性：</p>
+<ul>
+<li>follower 在收到 leader 的日志追加请求时如果位置冲突则需要通知 leader 进行快速恢复（从不冲突的位置进行覆盖），这样能保证在新的 leader 上任后，所有的 follower 和 leader 的日志一致，并且没有空隙</li>
+</ul>
+<p>提交安全性：</p>
+<ul>
+<li>因为一个节点一旦提交、apply 后就不能反悔了，所以提交也需要慎重</li>
+<li>leader 需要在合适的时机确定所有的 follower 都已经完成同步的日志号，并且<strong>该日志的 Term 需要等于当前 Term</strong>，然后将该位置的日志提交</li>
+<li>follower 只有在收到 leader 的提交位置后才能更新自己的提交位置</li>
+</ul>
+<p>一致性主要指集群中所有的节点数据需要能够容错，在恢复后仍然能保持一致。从整体来看，Raft 算法是<strong>强一致性模型</strong>，也就是系统保证不论在哪个时间点，外部的每个读操作都将返回最近的写操作的结果。保证强一致的机制就是 Raft 的集群提交状态，只有 leader 收到过半的 follower 的同步成功后，才向上层返回结果，此时哪怕 leader 宕机了，上面的投票规则也能保证选举出来的新 leader 具有最新的日志。</p>
+<h2 id="Lab-要求"><a href="#Lab-要求" class="headerlink" title="Lab 要求"></a>Lab 要求</h2><p>Lab 2 有四个子 Lab：</p>
+<ul>
+<li>Lab 2A：实现 leader 选举</li>
+<li>Lab 2B：实现日志复制/同步</li>
+<li>Lab 2C：实现持久化</li>
+<li>Lab 2D：实现日志压缩（快照）</li>
+</ul>
+<p>每一个子 Lab 都有一系列测试。2A 和 2B 是最主要的实现，2C 和 2D 以这两个为基础。但是 2C 和 2D 的测试极其严苛，能够测出很多前两个 Lab 中存在的 BUG，所以这四个 Lab 基本上是难度递增。</p>
+<p>实验提供了 <code>labrpc.go</code> 用来模拟现实网络环境下的 RPC 调用，同时也可以产生很严苛的测试场景。我们的所有代码写在 <code>raft.go</code> 中，这个文件仅规定了 Raft 与外界交互的接口，其他的内部实现全部需要自己完成。</p>
+<p>实验层会调用该文件中 <code>Make(peers, me, ...)</code> 函数来生成一个 Raft 对象，通过这个函数的参数我们可以知道集群中总共有多少个节点 (peers)，自己是哪一个节点（me），还有与外界传递信息的 apply 通道（applyCh）等。</p>
+<p>实验层会调用 <code>GetState()</code> 方法来获取当前节点所处的状态（leader/follower/candidate），通常情况下，客户端只会与 leader 进行交互。</p>
+<h2 id="关键问题"><a href="#关键问题" class="headerlink" title="关键问题"></a>关键问题</h2><h3 id="多-Leader-错误"><a href="#多-Leader-错误" class="headerlink" title="多 Leader 错误"></a>多 Leader 错误</h3><p>一般来说，只要不出现网络分区情况，集群中只能有一个 Leader，否则就是脑裂了。这就要求节点的身份及时、正确地改变。任何节点在收到 AE 和 Vote 请求时都要根据 Term 去判断自己是否要改变身份，这里身份的改变和其他属性（如当前 Term）的改变要<strong>保持原子性</strong>，否则容易出现多 Leader 错误。</p>
+<h3 id="计时功能设计"><a href="#计时功能设计" class="headerlink" title="计时功能设计"></a>计时功能设计</h3><p>Lab 官方推荐在需要进行周期性动作的地方使用 <code>time.Sleep()</code> 函数实现（因为简单），但是这个方案对于 Raft 的超时选举算法并不优雅，因为 Raft 要求 follower 在每次收到 leader 的心跳后重置选举计时器。因此我采用了 <code>time.Timer</code> 来实现 follower 的选举计时和 leader 的心跳计时，虽然 debug 难度增加了，但是更加接近 Raft 设计者的本意。</p>
+<h3 id="Log-存储问题"><a href="#Log-存储问题" class="headerlink" title="Log 存储问题"></a>Log 存储问题</h3><p>从逻辑上看，每个节点的本地日志就是一个 log 数组，一开始我也仅仅用一个数组存储，但是 log Index 的下标是从 1 开始的（论文中的考量），这就需要判断好各种边界问题。此外，做到 Lab 2D 的时候要求对日志进行裁剪，这个时候逻辑 Index 和实际 Index 已经完全不同了，如果每次都额外判断、处理的话工作量太大。所以我采用了<strong>面向对象</strong>的思想，引入了 LogManager 对象，用于统一向外界提供从 1 开始的索引映射和增删改查功能，大大的方便了后续开发。</p>
+<h3 id="一致性检查的问题"><a href="#一致性检查的问题" class="headerlink" title="一致性检查的问题"></a>一致性检查的问题</h3><p>Leader 始终要保证自己的 follower 和自己的 log 内容是一模一样的，同步就是通过 AE 请求。如果 Leader 发现了不一致的现象就要及时纠正。但是，检查的时机如何确定，如果次数太少，会导致群体一致性达成过慢；如果太过频繁，会加大并发问题的概率，同时也会造成网络拥堵。一般来说，每次心跳都是一次同步，但是远远不够，因为客户端可能会在两次心跳之间多次操作，请求达成一致。因此需要一种机制，既能够及时响应 Command，又能够尽量减少并发 RPC 冲突。</p>
+<p>我采用的是清零心跳计时器的方法。计时器清零后，如果上一次心跳已经结束，那么下一次会马上开始；如果上一次还没结束，那么就会等待心跳全部发送出去。这样不会再短时间的高并发情况下导致过多的心跳 RPC 出现，同时也能够达到一种<strong>批处理</strong>的效果。</p>
+<h3 id="如何判断提交状态"><a href="#如何判断提交状态" class="headerlink" title="如何判断提交状态"></a>如何判断提交状态</h3><p>一开始，我是在每次心跳完成后，根据 follower 的回复判断是否能够更新提交，后来发现太天真了。论文中设置 matchIndex 是非常有必要的，需要另起一个协程，通过判断 matchIndex 和 Leader 的 log index 来判断当前的提交位置。并且有一个条件非常关键：Raft 永远不会通过计算副本数目的方式来提交<strong>之前任期内</strong>的日志条目，否则在宕机重启后会出现数据不一致。</p>
+<h3 id="持久化需要注意什么"><a href="#持久化需要注意什么" class="headerlink" title="持久化需要注意什么"></a>持久化需要注意什么</h3><p>在分布式开发中，任何时刻都要确保系统在某一时刻的状态是一致的，因此在状态更改的时候为了防止宕机丢失数据，一定要及时进行持久化。<br>还要搞清两个问题：</p>
+<ol>
+<li>为什么要持久化 currentTerm？<ol>
+<li>因为避免出现两个意义不同的但数字相同的 Term</li>
+</ol>
+</li>
+<li>为什么要持久化 votedFor？<ol>
+<li>因为要避免一个 server 同时给多个 Candidate 投票</li>
+</ol>
+</li>
+</ol>
+<h3 id="快照需要注意什么"><a href="#快照需要注意什么" class="headerlink" title="快照需要注意什么"></a>快照需要注意什么</h3><p>在论文中有两种方法进行快照，一种是每个服务器独立拍摄快照的；另一种是由 leader 领导拍摄。Lab 是第一种，因此不用由 leader 主动同步，而是发现 follower 过于落后时同步。每个服务器平时也不需要 apply 快照，而是在过于落后或重启时才 apply。</p>
+<p>因为快照请求有可能在任何时间到达，它和 apply 操作是互斥的，因此一定要保证先后顺序，不让多余的 log 向上层 apply。</p>
+<h3 id="分布式应用开发的难点"><a href="#分布式应用开发的难点" class="headerlink" title="分布式应用开发的难点"></a>分布式应用开发的难点</h3><p>最难的部分就是<strong>不确定性</strong>，状态、请求顺序、机器可靠等问题都有极大地不确定性，需要很多看起来冗余实际上非常有必要的操作去避免不确定性带来的数据不一致问题，比如代码的先后顺序、原子性保证等。</p>
+<p>分布式应用的调试会非常折磨，因为有些 BUG 无法快速复现，因此在开发是需要养成随时打印日志的习惯，以便后期排查。</p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="Raft-对象结构"><a href="#Raft-对象结构" class="headerlink" title="Raft 对象结构"></a>Raft 对象结构</h3><p>Raft 从实现层面来说是一个底层库，向上层（Server）提供一致性保障的方法，因此需要明了 Raft 向外提供什么接口：</p>
+<ul>
+<li> <code>Make(peers, me, persister, applyCh)</code>，在当前 Server 节点构建 Raft 对象并返回，peers 是集群节点信息，me 是当前节点编号，persister 是持久化工具类，applyCh 是 Server 接收某个命令达成一致性结果的消息通道；</li>
+<li><code>Start(command interface&#123;&#125;)</code>，向当前节点发起一条命令一致性过程，该方法只有处于 Leader 状态的节点才可被调用；</li>
+<li><code>GetState()</code>，获取 Server 当前的 Raft 状态；</li>
+<li><code>Kill()</code>，结束 Raft 服务；</li>
+<li><code>Snapshot(index int, snapshot []byte)</code>，Server 完成快照，向 Raft 同步（日志裁剪）</li>
+</ul>
+<p>我设计的 Raft 对象关键字段：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 持久属性</span></span><br><span class="line">currentTerm <span class="type">int</span>         <span class="comment">// 当前任期</span></span><br><span class="line">votedFor    <span class="type">int</span>         <span class="comment">// 当前任期投票给了谁</span></span><br><span class="line">lm          *LogManager <span class="comment">// 管理日志存储</span></span><br><span class="line">snapshot    []<span class="type">byte</span>      <span class="comment">// 上一次保存的快照</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 易失属性</span></span><br><span class="line">state         <span class="type">string</span>        <span class="comment">// 当前角色状态</span></span><br><span class="line">commitIndex   <span class="type">int</span>           <span class="comment">// 已提交的最大下标</span></span><br><span class="line">lastApplied   <span class="type">int</span>           <span class="comment">// 以应用到状态机的最大下标</span></span><br><span class="line">applyCh       <span class="keyword">chan</span> ApplyMsg <span class="comment">// apply通道</span></span><br><span class="line">applyCond     *sync.Cond    <span class="comment">// apply协程唤醒条件</span></span><br><span class="line">installSnapCh <span class="keyword">chan</span> <span class="type">int</span>      <span class="comment">// install snapshot的信号通道，传入trim index</span></span><br><span class="line">backupApplied <span class="type">bool</span>          <span class="comment">// 从磁盘恢复的snapshot已经apply</span></span><br><span class="line">notTicking    <span class="keyword">chan</span> <span class="type">bool</span>     <span class="comment">// 没有进行选举计时</span></span><br><span class="line">electionTimer *time.Timer   <span class="comment">// 选举计时器</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Leader特有字段</span></span><br><span class="line">nextIndexes    []<span class="type">int</span>       <span class="comment">// 对于每个follower，leader要发送的下一个复制日志下标</span></span><br><span class="line">matchIndexes   []<span class="type">int</span>       <span class="comment">// 已知每个follower和自己一致的最大日志下标</span></span><br><span class="line">heartbeatTimer *time.Timer <span class="comment">// 心跳计时器</span></span><br></pre></td></tr></table></figure>
+<p>易失属性是指断电重启后就丢失内容的属性，丢失后不影响状态的正确性；持久属性是必须在适当的时间进行持久化的属性，否则断电重启后集群会发生异常。</p>
+<h3 id="超时选举实现"><a href="#超时选举实现" class="headerlink" title="超时选举实现"></a>超时选举实现</h3><p>在集群刚启动的时候，所有的节点都是 follower 状态，需要节点自觉地发起选举。为了避免同一个时刻有多个节点发起选举造成<strong>选举分裂</strong>，采用<strong>随机超时策略</strong>，当一个节点在某个随机的时间内都没有收到心跳的话，他便发起新一轮选举。<br><strong>选举流程：</strong></p>
+<ol>
+<li>当前 Term+1</li>
+<li>转换状态为 candidate</li>
+<li>投自己一票</li>
+<li>向其他人广播选举请求</li>
+<li>当收到超过半数投票后，转换为 leader，开启心跳</li>
+</ol>
+<p>投票通过 RequestVoteRPC 进行通知</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> kickOffElection() &#123;</span><br><span class="line">	rf.currentTerm++     <span class="comment">// 更新任期</span></span><br><span class="line">	rf.state = CANDIDATE <span class="comment">// 变为候选人</span></span><br><span class="line">	rf.votedFor = rf.me  <span class="comment">// 先投自己一票</span></span><br><span class="line">	rf.persist()</span><br><span class="line">	votes := <span class="number">1</span></span><br><span class="line">	total := <span class="built_in">len</span>(rf.peers)</span><br><span class="line">	args := rf.genRequestVoteArgs()</span><br><span class="line">	mu := sync.Mutex&#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; total; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> i == rf.me &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(server <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">			reply := RequestVoteReply&#123;&#125;</span><br><span class="line">			<span class="keyword">if</span> !rf.sendRequestVote(server, &amp;args, &amp;reply) &#123;</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> args.Term == rf.currentTerm &amp;&amp; rf.state == CANDIDATE &#123; <span class="comment">// 防止等的时间太长，已经开始了下一轮，或者身份已经变化</span></span><br><span class="line">				<span class="keyword">if</span> reply.Term &lt; rf.currentTerm &#123; <span class="comment">// 投票者的任期小于自己的</span></span><br><span class="line">					<span class="comment">// 丢弃</span></span><br><span class="line">					<span class="keyword">return</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> reply.VoteGranted &#123;</span><br><span class="line">					mu.Lock()</span><br><span class="line">					votes++</span><br><span class="line">					<span class="keyword">if</span> rf.state != LEADER &amp;&amp; votes &gt; total/<span class="number">2</span> &#123; <span class="comment">// 得票超半数</span></span><br><span class="line">						rf.initLeader()</span><br><span class="line">						rf.state = LEADER</span><br><span class="line">						<span class="comment">// 立即开始心跳</span></span><br><span class="line">						<span class="keyword">go</span> rf.heartbeat()</span><br><span class="line">					&#125;</span><br><span class="line">					mu.Unlock()</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;(i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意选举过程中身份、任期的判断和互斥锁的使用。</p>
+<p><strong>投票流程：</strong><br>任何节点在接收到某个<strong>非旧任期</strong> candidate 的投票请求后都要有所响应，要么同意要么否决。需要根据安全性规则投票。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) &#123;</span><br><span class="line">	<span class="keyword">if</span> args.Term &gt;= rf.currentTerm &#123; <span class="comment">// 候选人要比自己所在任期领先或持平</span></span><br><span class="line">		<span class="keyword">if</span> args.Term &gt; rf.currentTerm &#123; <span class="comment">// 新任期重置投票记录,改变身份</span></span><br><span class="line">			rf.enterNewTerm(args.Term)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> rf.state != CANDIDATE &#123; <span class="comment">// 如果不是候选人就重置选举计时</span></span><br><span class="line">			rf.resetElectionTimer()</span><br><span class="line">		&#125;</span><br><span class="line">		rf.mu.Lock()</span><br><span class="line">		reply.Term = rf.currentTerm</span><br><span class="line">		reply.VoteGranted = <span class="literal">false</span></span><br><span class="line">		<span class="keyword">if</span> rf.votedFor == <span class="number">-1</span> || rf.votedFor == args.CandidateId &#123; <span class="comment">// 每个任期只能投一次票</span></span><br><span class="line">			<span class="comment">// 安全性检查，即不能选日志的term和index落后自己的节点作为leader，term优先级大于index</span></span><br><span class="line">			<span class="built_in">len</span> := rf.lm.<span class="built_in">len</span>()</span><br><span class="line">			<span class="keyword">var</span> lastLogIndex, lastLogTerm <span class="type">int</span> <span class="comment">// 自身的最后index和term</span></span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">len</span> == rf.lm.lastTrimmedIndex &#123;</span><br><span class="line">				lastLogIndex = rf.lm.lastTrimmedIndex</span><br><span class="line">				lastLogTerm = rf.lm.lastTrimmedTerm</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				lastLogIndex = <span class="built_in">len</span></span><br><span class="line">				lastLogTerm = rf.lm.get(<span class="built_in">len</span>).Term</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> lastLogTerm == <span class="number">0</span> || lastLogTerm &lt; args.LastLogTerm &#123; <span class="comment">// 比较log term</span></span><br><span class="line">				reply.VoteGranted = <span class="literal">true</span></span><br><span class="line">				rf.votedFor = args.CandidateId</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> lastLogTerm == args.LastLogTerm &amp;&amp; lastLogIndex &lt;= args.LastLogIndex &#123; <span class="comment">// log term一样，比较index</span></span><br><span class="line">				reply.VoteGranted = <span class="literal">true</span></span><br><span class="line">				rf.votedFor = args.CandidateId</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		rf.mu.Unlock()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">go</span> rf.persist() <span class="comment">// 返回前持久化</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为这个部分涉及到了之后的日志剪裁，所以代码稍复杂。</p>
+<h3 id="Leader-心跳实现"><a href="#Leader-心跳实现" class="headerlink" title="Leader 心跳实现"></a>Leader 心跳实现</h3><p>当选成功的 Leader 需要立即发起心跳，心跳的目的有两个：</p>
+<ol>
+<li>维护自己的统治地位</li>
+<li>对 follower 进行日志同步</li>
+</ol>
+<p>均通过 AppendEntriesRPC 进行通知</p>
+<ul>
+<li>当 Entry 为空时，是心跳</li>
+<li>当 Entry 不为空时，是日志同步<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> sendHeartbeats() &#123;</span><br><span class="line">	total := <span class="built_in">len</span>(rf.peers)</span><br><span class="line">	args := AppendEntriesArgs&#123;&#125;</span><br><span class="line">	args.Term = rf.currentTerm</span><br><span class="line">	args.LeaderId = rf.me</span><br><span class="line">	args.LeaderCommit = rf.commitIndex</span><br><span class="line">	<span class="comment">// follower在收到日志后首先要检查这两个参数，与自己的不一致的话就要返回false</span></span><br><span class="line">	<span class="comment">// 这里是将leader目前最高index发送给follower去比对一致性，注意边界判断</span></span><br><span class="line">	rf.mu.Lock()</span><br><span class="line">	<span class="keyword">if</span> rf.lm.<span class="built_in">len</span>() &gt;= <span class="number">1</span> &#123;</span><br><span class="line">		args.PrevLogIndex = rf.lm.<span class="built_in">len</span>()</span><br><span class="line">		<span class="keyword">if</span> args.PrevLogIndex &gt; rf.lm.lastTrimmedIndex &#123;</span><br><span class="line">			args.PrevLogTerm = rf.lm.get(args.PrevLogIndex).Term</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			args.PrevLogIndex = rf.lm.lastTrimmedIndex</span><br><span class="line">			args.PrevLogTerm = rf.lm.lastTrimmedTerm</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	rf.mu.Unlock()</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; !rf.killed() &amp;&amp; i &lt; total &amp;&amp; rf.state == LEADER; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> i != rf.me &#123;</span><br><span class="line">			<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(server <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">				reply := AppendEntriesReply&#123;&#125;</span><br><span class="line">				<span class="keyword">if</span> rf.state == LEADER &amp;&amp; rf.sendRequestAppendEntries(server, &amp;args, &amp;reply) &#123;</span><br><span class="line">					<span class="keyword">if</span> reply.Term &gt; rf.currentTerm &#123; <span class="comment">// 其他节点的Term比自己高了，转变为follower</span></span><br><span class="line">						rf.enterNewTerm(reply.Term)</span><br><span class="line">						rf.resetElectionTimer()</span><br><span class="line">						<span class="keyword">return</span></span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">if</span> !reply.Success &#123; <span class="comment">// 说明出现了日志不一致</span></span><br><span class="line">						<span class="comment">// 主发生变化时有可能Index异常，因此先修正一次</span></span><br><span class="line">						rf.fastBackup(server, reply)</span><br><span class="line">						rf.agreement(server, rf.lm.<span class="built_in">len</span>(), <span class="literal">false</span>) <span class="comment">// 从最新位置检查一致性</span></span><br><span class="line">					&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">						<span class="comment">// 更新一致的位置</span></span><br><span class="line">						rf.mu.Lock()</span><br><span class="line">						rf.nextIndexes[server] = args.PrevLogIndex + <span class="number">1</span></span><br><span class="line">						rf.matchIndexes[server] = args.PrevLogIndex</span><br><span class="line">						rf.mu.Unlock()</span><br><span class="line">						rf.tryCommit() <span class="comment">// 每次心跳成功后检查能否进行提交</span></span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;(i)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>该方法通过定时器，定时执行。<br>Leader 会拿自己当前最新的 log 的位置去询问所有的 follower 该位置是否冲突，如果不冲突，那么在 Leader 记录该 follower 与自己的 log 最大匹配的下标和下一个接收日志的下标；如果冲突，那么就需要进入<strong>快速恢复和同步</strong>的流程。</p>
+<h3 id="快速恢复和同步实现"><a href="#快速恢复和同步实现" class="headerlink" title="快速恢复和同步实现"></a>快速恢复和同步实现</h3><p>在 Leader 察觉到有 follower 与自己的 log 有冲突时，需要进行同步。因为 Leader 是从自己当前的最高 log 位询问 follower 的，所以 Leader 需要一步一步把 log 位置向前移再次询问，直到遇到一个 follower 不冲突的位置，那么从这个位置往后都要被 Leader 的日志所覆盖。这也是强一致性的体现。</p>
+<p>但是，一个 follower 有可能刚刚宕机重启，它的日志可能落后于 Leader 很多条，这时候一步一步的试探效率十分低下。因此我们采用<strong>快速恢复策略</strong>，即 Leader 每次以 Term 为单位退回而不是 Index。</p>
+<p>具体的做法就是 follower 在拒绝 Leader 的 AE 请求时在回应中添加一个额外的字段，让 Leader 能够判断如何快速回退：</p>
+<ul>
+<li>XTerm：冲突的 log 任期，如果不存在 log，返回-1</li>
+<li>XIndex：任期号为 XTerm 的第一条 Log 的 Index</li>
+<li>XLen：follower 自己的 log 长度</li>
+</ul>
+<p>Leader 端的快速恢复算法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> fastBackup(server <span class="type">int</span>, reply AppendEntriesReply) &#123;</span><br><span class="line">	rf.mu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> rf.mu.Unlock()</span><br><span class="line">	<span class="keyword">if</span> reply.XTerm == <span class="number">-1</span> &#123; <span class="comment">// follower对应位置没有log</span></span><br><span class="line">		rf.nextIndexes[server] = reply.XLen + <span class="number">1</span></span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> reply.XTerm == <span class="number">0</span> &#123; <span class="comment">// 某个地方出问题了，执行到这里不应该是0</span></span><br><span class="line">		rf.nextIndexes[server] = <span class="number">1</span> <span class="comment">// 重置为1总没错</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		lastOfTerm := rf.findLastLogIndexOfTerm(reply.XTerm)</span><br><span class="line">		<span class="keyword">if</span> lastOfTerm == <span class="number">-1</span> &#123; <span class="comment">// leader没有follower的Term</span></span><br><span class="line">			rf.nextIndexes[server] = reply.XIndex</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			rf.nextIndexes[server] = lastOfTerm + <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Leader-提交判断"><a href="#Leader-提交判断" class="headerlink" title="Leader 提交判断"></a>Leader 提交判断</h3><p>一开始，我们总会容易认为以 cmd 为单位进行判断，因为 Raft 的逻辑模型很明显：Leader 收到 cmd -&gt; 生成日志 -&gt; 集群复制该日志 -&gt; 超过半数成功 -&gt; 提交该日志 -&gt; apply 该 cmd</p>
+<p>但其实，如果出现宕机重启、重新选举等问题，没有外部命令的时候我们同样需要不断更新提交状态，所以需要再每次同步之后，通过 Leader 记录的 matchIndex 来进行判断。需要注意：<strong>Raft 中的提交并不是某个操作，而是一种集群状态，如果 index 位置设置为提交位置，那么说明 index 之前的所有日志都已经提交。</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// leader统计matchIndex，尝试提交</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> tryCommit() &#123;</span><br><span class="line">	total := <span class="built_in">len</span>(rf.peers)</span><br><span class="line">	<span class="comment">// 找到一个最大的N&gt;commitIndex，使得超过半数的follower的matchIndex大于等于N，</span></span><br><span class="line">	<span class="comment">// 且leader自己N位置的log的Term等于当前Term（这一点很重要，安全性问题），那么N的位置就可以提交</span></span><br><span class="line">	<span class="built_in">len</span> := rf.lm.<span class="built_in">len</span>()</span><br><span class="line">	<span class="keyword">for</span> N := rf.commitIndex + <span class="number">1</span>; N &lt;= <span class="built_in">len</span>; N++ &#123;</span><br><span class="line">		majorityCnt := <span class="number">1</span></span><br><span class="line">		<span class="keyword">for</span> _, matchIndex := <span class="keyword">range</span> rf.matchIndexes &#123;</span><br><span class="line">			<span class="keyword">if</span> matchIndex &gt;= N &amp;&amp; rf.lm.get(N).Term == rf.currentTerm &#123;</span><br><span class="line">				majorityCnt++</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> majorityCnt &gt; total/<span class="number">2</span> &#123;</span><br><span class="line">			rf.commitIndex = N <span class="comment">// 更新提交Index</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	rf.mu.Lock()</span><br><span class="line">	rf.applyCond.Signal() <span class="comment">// 唤醒异步apply</span></span><br><span class="line">	rf.mu.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Leader 的 commitIndex 会随着心跳和同步请求到达所有的 follower，使 follower 的 commitIndex 也随之更新。当任何节点的 commitIndex 领先于上一次 apply 的 Index 的时候，就可以将这部分 log 向上层进行 apply。</p>
+<h3 id="Follower-处理日志同步"><a href="#Follower-处理日志同步" class="headerlink" title="Follower 处理日志同步"></a>Follower 处理日志同步</h3><p>follower 对 Leader 发来的日志同步请求进行处理是整个 Raft 算法最核心的地方，因为他决定着 Raft 的同步机制是否能够保持数据一致性。在实现的时候需要遵循安全性规则并且要注意不确定性情况的发生。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> RequestAppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) &#123;</span><br><span class="line">	reply.Term = rf.currentTerm</span><br><span class="line">	<span class="keyword">if</span> args.Term &lt; rf.currentTerm &#123; <span class="comment">// 说明这个leader已经过期</span></span><br><span class="line">		reply.Success = <span class="literal">false</span></span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 进入新的一个Term，更新</span></span><br><span class="line">	<span class="keyword">if</span> args.Term &gt; rf.currentTerm &#123;</span><br><span class="line">		rf.enterNewTerm(args.Term) <span class="comment">// 改变votedFor</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		rf.state = FOLLOWER <span class="comment">// 不改变votedFor</span></span><br><span class="line">	&#125;</span><br><span class="line">	rf.resetElectionTimer() <span class="comment">// 刷新选举计时</span></span><br><span class="line">	rf.mu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> rf.mu.Unlock()</span><br><span class="line">	<span class="keyword">if</span> args.PrevLogIndex &lt; rf.commitIndex || rf.findLastLogIndexOfTerm(args.Term) &gt; args.PrevLogIndex &#123; <span class="comment">// 说明这个请求滞后了</span></span><br><span class="line">		reply.XLen = rf.lm.<span class="built_in">len</span>()</span><br><span class="line">		reply.XTerm = <span class="number">-1</span></span><br><span class="line">		reply.Success = <span class="literal">false</span></span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 一致性检查</span></span><br><span class="line">	<span class="keyword">if</span> args.PrevLogIndex &gt; rf.lm.<span class="built_in">len</span>() &#123;</span><br><span class="line">		reply.XLen = rf.lm.<span class="built_in">len</span>()</span><br><span class="line">		reply.XTerm = <span class="number">-1</span></span><br><span class="line">		reply.Success = <span class="literal">false</span></span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> args.PrevLogIndex &gt;= <span class="number">1</span> &amp;&amp; args.PrevLogIndex &gt; rf.lm.lastTrimmedIndex &#123; <span class="comment">// 如果prevIndex已经被裁剪了，那一定不冲突</span></span><br><span class="line">		<span class="keyword">if</span> rf.lm.get(args.PrevLogIndex).Term != args.PrevLogTerm &#123;</span><br><span class="line">			<span class="comment">// 有冲突了</span></span><br><span class="line">			reply.XTerm = rf.lm.get(args.PrevLogIndex).Term</span><br><span class="line">			reply.XIndex = rf.findFirstLogIndexOfTerm(reply.XTerm)</span><br><span class="line">			reply.Success = <span class="literal">false</span></span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 这里有可能leader传来的一部分log已经裁掉了，需要过滤一下</span></span><br><span class="line">	from := max(args.PrevLogIndex+<span class="number">1</span>, rf.lm.lastTrimmedIndex+<span class="number">1</span>)</span><br><span class="line">	filter := min(from-args.PrevLogIndex<span class="number">-1</span>, <span class="built_in">len</span>(args.Entries)) <span class="comment">// 防止越界</span></span><br><span class="line">	args.Entries = args.Entries[filter:]</span><br><span class="line">	rf.lm.appendFrom(from, args.Entries) <span class="comment">// 强制追加（覆盖）日志</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 提交log</span></span><br><span class="line">	<span class="keyword">if</span> args.LeaderCommit &gt; rf.commitIndex &#123;</span><br><span class="line">		rf.commitIndex = min(args.LeaderCommit, rf.lm.<span class="built_in">len</span>())</span><br><span class="line">	&#125;</span><br><span class="line">	rf.applyCond.Signal() <span class="comment">// 唤醒异步apply</span></span><br><span class="line">	rf.persist()</span><br><span class="line">	reply.Success = <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要考虑选举计时刷新、滞后请求忽略、支持快速恢复、日志一致性检查、日志剪裁边界处理、更新提交 Index 几个方面。</p>
+<h3 id="异步-apply-实现"><a href="#异步-apply-实现" class="headerlink" title="异步 apply 实现"></a>异步 apply 实现</h3><p>因为 commitIndex 是随时动态变化的，所以 apply 也要跟着随时执行。但是在一个 Raft 内部同一时刻只能有一个 apply 线程，否则会发生冲突。我采用的是<strong>异步唤醒机制</strong>而不是方法调用去进行 apply。在开启 Raft 之后会新建一个 apply 协程，他会不断地比较 lastApplied 和 commitIndex 的大小，如果前者大于等于后者，说明当前没有需要 apply 的 cmd，协程阻塞；一旦 commitIndex 领先了，更新 commitIndex 的线程会唤醒该协程让他去 apply。这样就算同时有多个线程唤醒 apply，也能够保证<strong>幂等性</strong>，不会出现重复 apply 的现象。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(rf *Raft)</span></span> apply() &#123;</span><br><span class="line">	<span class="comment">// 先apply快照</span></span><br><span class="line">	<span class="keyword">if</span> rf.lm.lastTrimmedIndex != <span class="number">0</span> &#123;</span><br><span class="line">		rf.applySnapshot()</span><br><span class="line">	&#125;</span><br><span class="line">	rf.backupApplied = <span class="literal">true</span></span><br><span class="line">	<span class="comment">// 然后再apply剩余log</span></span><br><span class="line">	<span class="keyword">for</span> !rf.killed() &#123;</span><br><span class="line">		<span class="keyword">for</span> rf.lastApplied &gt;= rf.commitIndex &#123;</span><br><span class="line">			<span class="comment">// 每次休眠前先看有无快照可apply</span></span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> index := &lt;-rf.installSnapCh:</span><br><span class="line">				<span class="comment">// 这两个操作要保证原子性</span></span><br><span class="line">				rf.trim(index)</span><br><span class="line">				rf.applySnapshot()</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">			&#125;</span><br><span class="line">			rf.mu.Lock()</span><br><span class="line">			rf.applyCond.Wait() <span class="comment">// 等待别处唤醒去apply，避免了并发冲突</span></span><br><span class="line">			rf.mu.Unlock()</span><br><span class="line">		&#125;</span><br><span class="line">		rf.mu.Lock()</span><br><span class="line">		<span class="comment">// commitIndex领先了</span></span><br><span class="line">		applyIndex := rf.lastApplied + <span class="number">1</span></span><br><span class="line">		commitIndex := rf.commitIndex</span><br><span class="line">		entries := rf.lm.split(applyIndex, commitIndex+<span class="number">1</span>) <span class="comment">// 本轮要apply的所有log</span></span><br><span class="line">		rf.mu.Unlock()</span><br><span class="line">		<span class="keyword">for</span> index, log := <span class="keyword">range</span> entries &#123;</span><br><span class="line">			<span class="keyword">if</span> applyIndex &lt;= rf.lm.lastTrimmedIndex &#123; <span class="comment">// applyIndex落后快照了</span></span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">			msg := ApplyMsg&#123;</span><br><span class="line">				CommandValid: <span class="literal">true</span>,</span><br><span class="line">				Command:      log.Command,</span><br><span class="line">				CommandIndex: applyIndex,</span><br><span class="line">				CommandTerm:  log.Term, <span class="comment">// 为了Lab3加的</span></span><br><span class="line">			&#125;</span><br><span class="line">			rf.applyCh &lt;- msg</span><br><span class="line">			rf.mu.Lock()</span><br><span class="line">			<span class="keyword">if</span> rf.lastApplied &gt; applyIndex &#123; <span class="comment">// 说明snapshot抢先一步了</span></span><br><span class="line">				rf.mu.Unlock()</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">			rf.lastApplied = applyIndex</span><br><span class="line">			applyIndex++</span><br><span class="line">			rf.mu.Unlock()</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 apply 的过程中需要注意快照的问题，因为快照随时可能到达，快照在 apply 之后不能够在 apply 快照之前的 cmd。此外，宕机重启后如果有已经备份快照也需要先 apply，因此我用了一个 backupApplied 去进行标识。</p>
+<hr>
+<p>全部测试通过：</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://picgo-1259339555.cos.ap-nanjing.myqcloud.com/20240311203348.png" alt="image.png"/></div><div class="image-meta"><span class="image-caption center">image.png</span></div></div>
+
+
+
+
+
+</article>
+
+<div class="related-wrap reveal" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2023/12/01/824%20Lab%201/">MIT6.824 分布式系统课程实验笔记 Lab 1</a></div></section></div>
+
+
+
+
+
+
+
+
+      
+<footer class="page-footer reveal fs12"><hr><div class="text"><p>本站由 <a href="/">@zyrate</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar">Stellar</a> 主题创建。<br>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
+</div></footer>
+
+      <div class='float-panel mobile-only blur' style='display:none'>
+  <button type='button' class='sidebar-toggle mobile' onclick='sidebar.toggle()'>
+    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15301"><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 2.3 26.8 24.6 47.5 51.6 47.6h416.5v4z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15302"></path><path d="M566.407 808.3c26.9-0.1 49.3-20.8 51.6-47.6-1.9-27.7-23.9-49.7-51.6-51.6h-412.6c-28.2-1.4-52.6 19.5-55.5 47.6 1.9 27.7 23.9 49.7 51.6 51.6h416.5z m309.3-249.9c26.9-0.1 49.3-20.8 51.6-47.6-2.2-26.8-24.6-47.5-51.6-47.6h-721.9c-27.7-2.8-52.5 17.4-55.3 45.1-0.1 0.8-0.1 1.7-0.2 2.5 0.9 27.2 23.6 48.5 50.7 47.6H875.707z m-103.1-245.9c26.9-0.1 49.3-20.8 51.6-47.6-0.4-28.3-23.2-51.1-51.5-51.6h-618.9c-29.5-1.1-54.3 21.9-55.5 51.4v0.2c1.4 27.8 25.2 49.2 53 47.8 0.8 0 1.7-0.1 2.5-0.2h618.8z" p-id="15303"></path></svg>
+  </button>
+</div>
+
+    </div>
+  </div>
+  <div class='scripts'>
+    <script type="text/javascript">
+  const stellar = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    loadCSS: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    // 从 butterfly 和 volantis 获得灵感
+    loadScript: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    // https://github.com/jerryc127/hexo-theme-butterfly
+    jQuery: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        stellar.loadScript(stellar.plugins.jQuery).then(fn)
+      } else {
+        fn()
+      }
+    }
+  };
+  stellar.version = '1.19.0';
+  stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/1.19.0';
+  stellar.config = {
+    date_suffix: {
+      just: '刚刚',
+      min: '分钟前',
+      hour: '小时前',
+      day: '天前',
+      month: '个月前',
+    },
+    root : '/',
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: 'https://gcore.jsdelivr.net/npm/jquery@3.6.2/dist/jquery.min.js'
+  };
+
+  if ('local_search') {
+    stellar.search = {};
+    stellar.search.service = 'local_search';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, {"field":"all","path":"/search.json","content":true,"sort":"-date"});
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
+  // stellar js
+  stellar.plugins.stellar = Object.assign({"sites":"/js/plugins/sites.js","friends":"/js/plugins/friends.js","ghinfo":"/js/plugins/ghinfo.js","timeline":"/js/plugins/timeline.js","linkcard":"/js/plugins/linkcard.js","fcircle":"/js/plugins/fcircle.js","weibo":"/js/plugins/weibo.js"});
+
+  stellar.plugins.marked = Object.assign("https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js");
+  // optional plugins
+  if ('true' == 'true') {
+    stellar.plugins.lazyload = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js","transition":"blur"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.swiper = Object.assign({"enable":true,"css":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.css","js":"https://unpkg.com/swiper@8.4.5/swiper-bundle.min.js"});
+  }
+  if ('' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign({"enable":null,"js":"https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js","distance":"8px","duration":500,"interval":100,"scale":1});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.preload = Object.assign({"enable":true,"service":"flying_pages","instant_page":"https://gcore.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js","flying_pages":"https://gcore.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.fancybox = Object.assign({"enable":true,"js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css","selector":".swiper-slide img"});
+  }
+  if ('false' == 'true') {
+    stellar.plugins.heti = Object.assign({"enable":false,"css":"https://unpkg.com/heti@0.9.2/umd/heti.min.css","js":"https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js"});
+  }
+  if ('true' == 'true') {
+    stellar.plugins.copycode = Object.assign({"enable":true,"js":"/js/plugins/copycode.js","default_text":"Copy","success_text":"Copied"});
+  }
+</script>
+
+<!-- required -->
+
+  
+<script src="/js/main.js" async></script>
+
+
+
+<!-- optional -->
+
+
+
+<!-- inject -->
+
+
+  </div>
+</body>
+</html>
